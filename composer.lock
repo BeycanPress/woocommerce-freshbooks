@@ -1,0 +1,98 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "8eb3f75b0a3cf080e5be8c8dde34684b",
+    "packages": [
+        {
+            "name": "beycanpress/freshbooks",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BeycanPress/freshbooks.git",
+                "reference": "7d9f48c49730c6750a8ddf8c9db340df2ce4c231"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/7d9f48c49730c6750a8ddf8c9db340df2ce4c231",
+                "reference": "7d9f48c49730c6750a8ddf8c9db340df2ce4c231",
+                "shasum": ""
+            },
+            "require": {
+                "beycanpress/http": "^0.1.3",
+                "php": ">=7.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BeycanPress\\FreshBooks\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "FreshBooks API SDK.",
+            "homepage": "https://github.com/BeycanPress/freshbooks",
+            "keywords": [
+                "api",
+                "freshbooks",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/BeycanPress/freshbooks/issues",
+                "source": "https://github.com/BeycanPress/freshbooks/tree/master"
+            },
+            "time": "2023-05-04T08:33:04+00:00"
+        },
+        {
+            "name": "beycanpress/http",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BeycanPress/http.git",
+                "reference": "dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BeycanPress/http/zipball/dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded",
+                "reference": "dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BeycanPress\\Http\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A simple and useful library for HTTP requests, response and client.",
+            "homepage": "https://github.com/BeycanPress/http",
+            "support": {
+                "issues": "https://github.com/BeycanPress/http/issues",
+                "source": "https://github.com/BeycanPress/http/tree/0.1.3"
+            },
+            "time": "2023-05-04T08:25:39+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "beycanpress/freshbooks": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

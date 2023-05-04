@@ -1,0 +1,89 @@
+{
+    "packages": [
+        {
+            "name": "beycanpress/freshbooks",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BeycanPress/freshbooks.git",
+                "reference": "7d9f48c49730c6750a8ddf8c9db340df2ce4c231"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/7d9f48c49730c6750a8ddf8c9db340df2ce4c231",
+                "reference": "7d9f48c49730c6750a8ddf8c9db340df2ce4c231",
+                "shasum": ""
+            },
+            "require": {
+                "beycanpress/http": "^0.1.3",
+                "php": ">=7.4"
+            },
+            "time": "2023-05-04T08:33:04+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BeycanPress\\FreshBooks\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "FreshBooks API SDK.",
+            "homepage": "https://github.com/BeycanPress/freshbooks",
+            "keywords": [
+                "api",
+                "freshbooks",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/BeycanPress/freshbooks/issues",
+                "source": "https://github.com/BeycanPress/freshbooks/tree/master"
+            },
+            "install-path": "../beycanpress/freshbooks"
+        },
+        {
+            "name": "beycanpress/http",
+            "version": "0.1.3",
+            "version_normalized": "0.1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BeycanPress/http.git",
+                "reference": "dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BeycanPress/http/zipball/dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded",
+                "reference": "dc6ad1f1d30e3ad47bc9b26bce5ea295ce7caded",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "time": "2023-05-04T08:25:39+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BeycanPress\\Http\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A simple and useful library for HTTP requests, response and client.",
+            "homepage": "https://github.com/BeycanPress/http",
+            "support": {
+                "issues": "https://github.com/BeycanPress/http/issues",
+                "source": "https://github.com/BeycanPress/http/tree/0.1.3"
+            },
+            "install-path": "../beycanpress/http"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
