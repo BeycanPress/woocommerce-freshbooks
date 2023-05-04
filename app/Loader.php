@@ -56,16 +56,20 @@ class Loader extends PluginHero\Plugin
 
     public function adminProcess() : void
     {
-        if (!$this->setting('connected')) {
+        if (
+            !$this->setting('connected') && 
+            isset($_GET['page']) && 
+            $_GET['page'] == 'wcfb_settings'
+        ) {
             add_action('admin_enqueue_scripts', function() {
-                $conn = $this->callFunc('initFbConnection');
-    
-                $key = $this->addScript('js/admin.js', ['jquery']);
-                wp_localize_script($key, 'WCFB', [
-                    'ajaxUrl' => admin_url('admin-ajax.php'),
-                    'nonce' => $this->createNewNonce(),
-                    'fbUrl' => $conn->getAuthRequestUrl()
-                ]);
+                if ($conn = $this->callFunc('initFbConnection')) {
+                    $key = $this->addScript('js/admin.js', ['jquery']);
+                    wp_localize_script($key, 'WCFB', [
+                        'ajaxUrl' => admin_url('admin-ajax.php'),
+                        'nonce' => $this->createNewNonce(),
+                        'fbUrl' => $conn->getAuthRequestUrl()
+                    ]);
+                }
             });
         }
 

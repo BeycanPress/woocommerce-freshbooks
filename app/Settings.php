@@ -63,7 +63,7 @@ class Settings extends Setting
                     'id'      => 'connect',
                     'title'   => esc_html__('Connect', 'wcfb'),
                     'type'    => 'content',
-                    'content' => '<a href="#" class="button button-primary connect-to-freshbooks">' . esc_html__('Connect', 'wcfb') . '</a>',
+                    'content' => (self::get('clientId') && self::get('clientSecret')) ? '<a href="#" class="button button-primary connect-to-freshbooks">' . esc_html__('Connect', 'wcfb') . '</a>' : esc_html__('Before you can connect, you must enter your application credentials. Please do not forget to refresh the page after entering the relevant settings.', 'wcfb'),
                     'dependency' => array('connected', '==', false)
                 ),
                 array(
