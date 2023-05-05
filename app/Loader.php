@@ -33,6 +33,7 @@ class Loader extends PluginHero\Plugin
 
                         if ($authenticate) {
                             $this->conn->refreshAuthentication();
+                            $this->updateSetting('connected', true);
                             $this->conn->setAccount($this->setting('account'));
                         }
 

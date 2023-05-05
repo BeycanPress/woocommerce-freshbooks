@@ -3,6 +3,7 @@
 namespace BeycanPress\WooCommerce\FreshBooks;
 
 use \BeycanPress\Http\Request;
+use \BeycanPress\Http\Response;
 
 class Api extends PluginHero\Api
 {
@@ -14,6 +15,10 @@ class Api extends PluginHero\Api
             'wcfb' => [
                 'get-access-token' => [
                     'callback' => 'getAccessToken',
+                    'methods' => ['GET']
+                ],
+                'refresh-authentication' => [
+                    'callback' => 'refrestAuthentication',
                     'methods' => ['GET']
                 ]
             ]
@@ -36,6 +41,20 @@ class Api extends PluginHero\Api
             $this->updateSetting('connected', true);
             $this->updateSetting('account', $account->getId());
             $this->redirect(admin_url('admin.php?page=wcfb_settings'));
+        } catch (\Throwable $th) {
+            $this->debug($th->getMessage(), 'CRITICAL');
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function refrestAuthentication()
+    {
+        try {
+            $this->callFunc('initFbConnection')->refreshAuthentication();
+            $this->updateSetting('connected', true);
+            Response::success();
         } catch (\Throwable $th) {
             $this->debug($th->getMessage(), 'CRITICAL');
         }

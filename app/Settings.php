@@ -10,7 +10,7 @@ class Settings extends Setting
     {
         parent::__construct(esc_html__('WC FreshBooks Settings', 'wcfb'));
 
-        $conn = $this->callFunc('initFbConnection');
+        $conn = $this->callFunc('initFbConnection', true);
 
         $accounts = [];
         if ($conn && $this->setting('connected')) {
@@ -20,7 +20,7 @@ class Settings extends Setting
         } else {
             $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
         }
-        
+
         add_action('admin_head', function() {
             echo '<style>
                 .connected-switcher {display: none;}

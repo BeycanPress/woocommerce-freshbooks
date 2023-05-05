@@ -162,12 +162,8 @@ class Connection
      */
     public function setAccount(?string $id = null) : Connection
     {
-        if ($id) {
-            if (isset($this->getAccounts()[$id])) {
-                $this->account = new Account($this->accounts[$id]);
-            } else {
-                throw new \Exception('Account not found');
-            }
+        if (isset($this->getAccounts()[$id])) {
+            $this->account = new Account($this->accounts[$id]);
         } else {
             $this->account = new Account($this->getFirstAccount());
         }

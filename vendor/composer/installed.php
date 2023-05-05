@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'e8bce5fef627607a3e7407252c22611b24410a32',
+        'reference' => '0015ef86e622b0b14fe915535040d9b7a133fe15',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e8bce5fef627607a3e7407252c22611b24410a32',
+            'reference' => '0015ef86e622b0b14fe915535040d9b7a133fe15',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'beycanpress/freshbooks' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7d9f48c49730c6750a8ddf8c9db340df2ce4c231',
+            'reference' => '400efdfb3b989a3a96ab01a5e3f5a66a83dff2dc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../beycanpress/freshbooks',
             'aliases' => array(
