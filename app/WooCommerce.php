@@ -3,14 +3,21 @@
 namespace BeycanPress\WooCommerce\FreshBooks;
 
 use \BeycanPress\FreshBooks\Connection;
+use \BeycanPress\FreshBooks\Model\Invoice;
 use \BeycanPress\FreshBooks\Model\InvoiceLine;
 
 class WooCommerce
 {
     use PluginHero\Helpers;
 
+    /**
+     * @var Connection
+     */
     private $conn;
 
+    /**
+     * @var Invoice
+     */
     private $invoice;
 
     public function __construct()

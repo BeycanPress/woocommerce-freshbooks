@@ -4,9 +4,13 @@ namespace BeycanPress\WooCommerce\FreshBooks;
 
 use \BeycanPress\Http\Request;
 use \BeycanPress\Http\Response;
+use \BeycanPress\FreshBooks\Connection;
 
 class Api extends PluginHero\Api
 {
+    /**
+     * @var Request
+     */
     private $request;
 
     public function __construct()
@@ -32,6 +36,7 @@ class Api extends PluginHero\Api
      */
     public function getAccessToken()
     {
+        /** @var Connection */
         $conn = $this->callFunc('initFbConnection');
 
         try {
@@ -52,6 +57,7 @@ class Api extends PluginHero\Api
     public function refrestAuthentication()
     {
         try {
+            /** @var Connection */
             $this->callFunc('initFbConnection')->refreshAuthentication();
             $this->updateSetting('connected', true);
             Response::success();

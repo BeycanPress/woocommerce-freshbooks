@@ -6,6 +6,9 @@ use \BeycanPress\FreshBooks\Connection;
 
 class Loader extends PluginHero\Plugin
 {
+    /**
+     * @var Connection
+     */
     private $conn;
 
     public function __construct($pluginFile)
@@ -28,7 +31,7 @@ class Loader extends PluginHero\Plugin
                         $this->conn = new Connection(
                             $this->setting('clientId'),
                             $this->setting('clientSecret'),
-                            home_url('/wp-json/wcfb/get-access-token')
+                            'https://beycanpress.net/get-access-code'
                         );
 
                         if ($authenticate) {
