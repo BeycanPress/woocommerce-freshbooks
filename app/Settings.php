@@ -11,6 +11,11 @@ class Settings extends Setting
         parent::__construct(esc_html__('WC FreshBooks Settings', 'wcfb'));
 
         $conn = $this->callFunc('initFbConnection', true);
+        if (isset($_GET['disconnect'])) {
+            $conn->deleteTokenFile();
+            $this->updateSetting('connected', false);
+            $this->redirect(admin_url('admin.php?page=wcfb_settings'));
+        }
 
         $accounts = [];
         if ($conn && $this->setting('connected')) {
@@ -56,7 +61,8 @@ class Settings extends Setting
                     'id'      => 'connectedStatus',
                     'title'   => esc_html__('Connect', 'wcfb'),
                     'type'    => 'content',
-                    'content' => '<span class="connected-status">' . esc_html__('Connected', 'wcfb') . '</span>',
+                    'content' => '<span class="connected-status">' . esc_html__('Connected', 'wcfb') . '</span><br>
+                    <a href="'.$this->getCurrentUrl().'&disconnect=1" class="disconnect-from-freshbooks">' . esc_html__('Disconnect', 'wcfb') . '</a>',
                     'dependency' => array('connected', '==', true)
                 ),
                 array(
@@ -82,6 +88,13 @@ class Settings extends Setting
             'title'  => esc_html__('Invoice settings', 'wcfb'),
             'icon'   => 'fas fa-file-alt',
             'fields' => array(
+                array(
+                    'id'      => 'createInvoice',
+                    'title'   => esc_html__('Create invoice', 'wcfb'),
+                    'type'    => 'switcher',
+                    'default' => false,
+                    'help'    => esc_html__('If you want create invoice for order, you can enable this setting.', 'wcfb')
+                ),
                 array(
                     'id'      => 'sendToEmail',
                     'title'   => esc_html__('Send to email', 'wcfb'),

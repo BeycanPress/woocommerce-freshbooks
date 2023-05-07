@@ -34,7 +34,7 @@ class Loader extends PluginHero\Plugin
                             home_url('/wp-json/wcfb/get-access-token')
                         );
 
-                        if ($authenticate) {
+                        if ($authenticate && file_exists($this->conn->getTokenFile())) {
                             $this->conn->refreshAuthentication();
                             $this->updateSetting('connected', true);
                             $this->conn->setAccount($this->setting('account'));
@@ -55,7 +55,9 @@ class Loader extends PluginHero\Plugin
             }
         });
 
-        new WooCommerce();
+        if ($this->setting('createInvoice')) {
+            new WooCommerce();
+        }
     }
 
     public function adminProcess() : void
