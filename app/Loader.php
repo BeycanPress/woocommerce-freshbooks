@@ -31,7 +31,7 @@ class Loader extends PluginHero\Plugin
                         $this->conn = new Connection(
                             $this->setting('clientId'),
                             $this->setting('clientSecret'),
-                            'https://beycanpress.net/get-access-code'
+                            home_url('/wp-json/wcfb/get-access-token')
                         );
 
                         if ($authenticate) {
