@@ -22,25 +22,29 @@ class WooCommerce
 
     public function __construct()
     {
-        if (!is_admin()) {
-            add_action('woocommerce_payment_complete', [$this, 'paymentCompleted']);
-            add_action('woocommerce_checkout_order_processed', [$this, 'invoiceProcess']);
-        } else {
-            add_action('woocommerce_order_status_completed', [$this, 'paymentCompleted']);
-        }
+        add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
     }
 
     /**
      * @param int $orderId
      * @return void
      */
-    public function invoiceProcess($orderId)
+    public function invoiceProcess(int $orderId)
     {
         if (!$conn = $this->callFunc('initFbConnection', true)) return;
 
         try {
             $order = wc_get_order($orderId);
+
+            $paymentMethod = $order->get_payment_method();
+            if (in_array($paymentMethod, $this->setting('excludePaymentMethods'))) {
+                return;
+            }
             
+            if ($order->get_meta('_wcfb_invoice_id')) {
+                return;
+            }
+
             $email = $order->get_billing_email();
             
             if (!$client = $conn->client()->searchByEmail($email)) {
@@ -106,6 +110,8 @@ class WooCommerce
             if ($this->setting('sendToEmail')) {
                 $this->invoice->sendToEMail($email);
             }
+
+            $this->paymentCompleted($orderId);
         } catch (\Throwable $th) {
             $this->debug($th->getMessage(), 'CRITICAL');
         }
@@ -115,7 +121,7 @@ class WooCommerce
      * @param int $orderId
      * @return void
      */
-    public function paymentCompleted($orderId)
+    public function paymentCompleted(int $orderId)
     {
         if (!$conn = $this->callFunc('initFbConnection', true)) return;
         

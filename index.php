@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: WooCommerce FreshBooks Integration
- * Version:     1.0.0
+ * Version:     1.0.2
  * Plugin URI:  https://github.com/BeycanPress/woocommerce-freshbooks-plugin
  * Description: WooCommerce FreshBooks Integration
  * Author:      BeycanPress

@@ -17,12 +17,18 @@ class Settings extends Setting
             $this->redirect(admin_url('admin.php?page=wcfb_settings'));
         }
 
-        $accounts = [];
-        if ($conn && $this->setting('connected')) {
-            foreach ($conn->getAccounts() as $account) {
-                $accounts[$account->account_id] = $account->name;
+        try {
+            $accounts = [];
+            if ($conn && $this->setting('connected')) {
+                foreach ($conn->getAccounts() as $account) {
+                    $accounts[$account->account_id] = $account->name;
+                }
+            } else {
+                $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
             }
-        } else {
+        } catch (\Exception $e) {
+            $this->debug($e->getMessage(), 'CRITICAL');
+            $this->updateSetting('connected', false);
             $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
         }
 
@@ -83,6 +89,11 @@ class Settings extends Setting
             )
         ));
 
+        $paymentMethods = [];
+        foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
+            $paymentMethods[$key] = $value->title;
+        }
+
         self::createSection(array(
             'id'     => 'invoiceSettings', 
             'title'  => esc_html__('Invoice settings', 'wcfb'),
@@ -101,7 +112,15 @@ class Settings extends Setting
                     'type'    => 'switcher',
                     'default' => false,
                     'help'    => esc_html__('If you want to send invoice to customer email, you can enable this setting.', 'wcfb')
-                )
+                ),
+                array(
+                    'id'       => 'excludePaymentMethods',
+                    'title'    => esc_html__('Excluded payment methods', 'wcfb'),
+                    'type'     => 'select',
+                    'options'  => $paymentMethods,
+                    'chosen'   => true,
+                    'multiple' => true,
+                ),
             ) 
         ));
 
