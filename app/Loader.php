@@ -31,7 +31,7 @@ class Loader extends PluginHero\Plugin
                         $this->conn = new Connection(
                             $this->setting('clientId'),
                             $this->setting('clientSecret'),
-                            home_url('/wp-json/wcfb/get-access-token')
+                            'https://halilbeycan.com/get-access-token'
                         );
 
                         if ($authenticate && file_exists($this->conn->getTokenFile())) {
@@ -80,7 +80,8 @@ class Loader extends PluginHero\Plugin
         }
 
         add_action('init', function(){
-            new Settings;
+            new Settings();
+            new DebugLogs();
         }, 9);
     }
 }

@@ -49,10 +49,10 @@ class WooCommerce
             
             if (!$client = $conn->client()->searchByEmail($email)) {
                 $client = $conn->client()
+                ->setEmail($email)
                 ->setFirstName($order->get_billing_first_name())
                 ->setLastName($order->get_billing_last_name())
                 ->setOrganization($order->get_billing_company())
-                ->setEmail($email)
                 ->setMobilePhone($order->get_billing_phone())
                 ->setBillingStreet($order->get_billing_address_1())
                 ->setBillingStreet2($order->get_billing_address_2())
@@ -62,6 +62,8 @@ class WooCommerce
                 ->setBillingCountry($order->get_billing_country())
                 ->setCurrencyCode($order->get_currency())
                 ->create();
+
+                do_action('wcfb_client_created', $this->invoice, $order);
             }
 
             $lines = [];
@@ -95,12 +97,26 @@ class WooCommerce
                 $lines[] = $line;
             }
 
+            $discountCodes = $order->get_coupon_codes(); 
+            $discountCodes = implode(',', $discountCodes);
+            $discountToal = $order->get_discount_total(); 
+
             $this->invoice = $conn->invoice()
             ->setStatus("draft")
             ->setCustomerId($client->getId())
             ->setCreateDate(date("Y-m-d"))
-            ->setLines($lines)
-            ->create();
+            ->setLines($lines);
+
+            if ($discountToal > 0) {
+                $this->invoice
+                ->setDiscountDescription($discountCodes)
+                ->setDiscountTotal((object) [
+                    "amount" => $discountToal,
+                    "code" => $order->get_currency()
+                ]);
+            }
+
+            $this->invoice->create();
 
             if ($this->invoice) {
                 $order->update_meta_data('_wcfb_invoice_id', $this->invoice->getId());
@@ -111,7 +127,10 @@ class WooCommerce
                 $this->invoice->sendToEMail($email);
             }
 
+            do_action('wcfb_invoice_created', $this->invoice, $order);
+
             $this->paymentCompleted($orderId);
+
         } catch (\Throwable $th) {
             $this->debug($th->getMessage(), 'CRITICAL');
         }
@@ -141,6 +160,8 @@ class WooCommerce
                 ->setDate(date("Y-m-d"))
                 ->setType("Other")
                 ->create();
+                
+                do_action('wcfb_payment_completed', $this->invoice, $order);
             } catch (\Throwable $th) {
                 $this->debug($th->getMessage(), 'CRITICAL');
             }

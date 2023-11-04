@@ -41,6 +41,7 @@ class Api extends PluginHero\Api
 
         try {
             $code = $this->request->get('code');
+            if (!$code) die('Code is required.');
             $conn->getAccessTokenByAuthCode($code);
             $account = $conn->setAccount()->getAccount();
             $this->updateSetting('connected', true);
