@@ -5,6 +5,6 @@
         }
     },
     "require": {
-        "beycanpress/freshbooks": "dev-master"
+        "beycanpress/freshbooks": "^0.1.1"
     }
 }

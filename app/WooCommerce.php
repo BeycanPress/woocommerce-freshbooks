@@ -73,7 +73,7 @@ class WooCommerce
                 $line = (new InvoiceLine())
                 ->setName($item->get_name())
                 ->setAmount((object) [
-                    "amount" => ($item->get_total() / $item->get_quantity()),
+                    "amount" => ($item->get_subtotal() / $item->get_quantity()),
                     "code" => $order->get_currency()
                 ])
                 ->setQuantity($item->get_quantity());
@@ -97,23 +97,28 @@ class WooCommerce
                 $lines[] = $line;
             }
 
-            $discountCodes = $order->get_coupon_codes(); 
-            $discountCodes = implode(',', $discountCodes);
-            $discountToal = $order->get_discount_total(); 
-
             $this->invoice = $conn->invoice()
             ->setStatus("draft")
             ->setCustomerId($client->getId())
             ->setCreateDate(date("Y-m-d"))
             ->setLines($lines);
 
-            if ($discountToal > 0) {
+            $totalDiscount = $order->get_total_discount(); 
+
+            if ($totalDiscount > 0) {
+                $discountCodes = $order->get_coupon_codes(); 
+                $discountCodes = implode(',', $discountCodes);
+                $totalOrderValue = $order->get_subtotal();
+    
+                if ($totalOrderValue > 0) {
+                    $discountRate = ($totalDiscount / $totalOrderValue) * 100;
+                } else {
+                    $discountRate = 0; 
+                }
+
                 $this->invoice
-                ->setDiscountDescription($discountCodes)
-                ->setDiscountTotal((object) [
-                    "amount" => $discountToal,
-                    "code" => $order->get_currency()
-                ]);
+                ->setDiscountValue($discountRate)
+                ->setDiscountDescription($discountCodes);
             }
 
             $this->invoice->create();
@@ -132,6 +137,9 @@ class WooCommerce
             $this->paymentCompleted($orderId);
 
         } catch (\Throwable $th) {
+
+            wp_mail(get_option('admin_email'), 'FreshBooks Invoice Create Error', $th->getMessage());
+
             $this->debug($th->getMessage(), 'CRITICAL');
         }
     }
@@ -163,6 +171,9 @@ class WooCommerce
                 
                 do_action('wcfb_payment_completed', $this->invoice, $order);
             } catch (\Throwable $th) {
+                
+                wp_mail(get_option('admin_email'), 'FreshBooks Payment Add Error', $th->getMessage());
+
                 $this->debug($th->getMessage(), 'CRITICAL');
             }
         }

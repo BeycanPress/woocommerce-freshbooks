@@ -4,27 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8eb3f75b0a3cf080e5be8c8dde34684b",
+    "content-hash": "39e4e03ce455d72f98fc5401bbb79d94",
     "packages": [
         {
             "name": "beycanpress/freshbooks",
-            "version": "dev-master",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeycanPress/freshbooks.git",
-                "reference": "400efdfb3b989a3a96ab01a5e3f5a66a83dff2dc"
+                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/400efdfb3b989a3a96ab01a5e3f5a66a83dff2dc",
-                "reference": "400efdfb3b989a3a96ab01a5e3f5a66a83dff2dc",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/4394880ac5537eee0ef31f3126a084a34767d88e",
+                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e",
                 "shasum": ""
             },
             "require": {
                 "beycanpress/http": "^0.1.3",
                 "php": ">=7.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -44,9 +43,9 @@
             ],
             "support": {
                 "issues": "https://github.com/BeycanPress/freshbooks/issues",
-                "source": "https://github.com/BeycanPress/freshbooks/tree/master"
+                "source": "https://github.com/BeycanPress/freshbooks/tree/0.1.1"
             },
-            "time": "2023-05-05T08:39:19+00:00"
+            "time": "2023-11-04T13:01:27+00:00"
         },
         {
             "name": "beycanpress/http",
@@ -87,9 +86,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "beycanpress/freshbooks": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
