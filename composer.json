@@ -5,6 +5,6 @@
         }
     },
     "require": {
-        "beycanpress/freshbooks": "^0.1.1"
+        "beycanpress/freshbooks": "^0.1.2"
     }
 }

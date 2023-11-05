@@ -2,24 +2,24 @@
     "packages": [
         {
             "name": "beycanpress/freshbooks",
-            "version": "0.1.1",
-            "version_normalized": "0.1.1.0",
+            "version": "0.1.2",
+            "version_normalized": "0.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeycanPress/freshbooks.git",
-                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e"
+                "reference": "38cfc19a9ee48eec18b58f98760f55e1119f9130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/4394880ac5537eee0ef31f3126a084a34767d88e",
-                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/38cfc19a9ee48eec18b58f98760f55e1119f9130",
+                "reference": "38cfc19a9ee48eec18b58f98760f55e1119f9130",
                 "shasum": ""
             },
             "require": {
                 "beycanpress/http": "^0.1.3",
                 "php": ">=7.4"
             },
-            "time": "2023-11-04T13:01:27+00:00",
+            "time": "2023-11-05T05:38:24+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -40,7 +40,7 @@
             ],
             "support": {
                 "issues": "https://github.com/BeycanPress/freshbooks/issues",
-                "source": "https://github.com/BeycanPress/freshbooks/tree/0.1.1"
+                "source": "https://github.com/BeycanPress/freshbooks/tree/0.1.2"
             },
             "install-path": "../beycanpress/freshbooks"
         },

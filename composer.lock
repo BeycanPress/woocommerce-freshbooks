@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39e4e03ce455d72f98fc5401bbb79d94",
+    "content-hash": "11a5366a10514dd87149ec10bfdec1d9",
     "packages": [
         {
             "name": "beycanpress/freshbooks",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeycanPress/freshbooks.git",
-                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e"
+                "reference": "38cfc19a9ee48eec18b58f98760f55e1119f9130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/4394880ac5537eee0ef31f3126a084a34767d88e",
-                "reference": "4394880ac5537eee0ef31f3126a084a34767d88e",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/38cfc19a9ee48eec18b58f98760f55e1119f9130",
+                "reference": "38cfc19a9ee48eec18b58f98760f55e1119f9130",
                 "shasum": ""
             },
             "require": {
@@ -43,9 +43,9 @@
             ],
             "support": {
                 "issues": "https://github.com/BeycanPress/freshbooks/issues",
-                "source": "https://github.com/BeycanPress/freshbooks/tree/0.1.1"
+                "source": "https://github.com/BeycanPress/freshbooks/tree/0.1.2"
             },
-            "time": "2023-11-04T13:01:27+00:00"
+            "time": "2023-11-05T05:38:24+00:00"
         },
         {
             "name": "beycanpress/http",
