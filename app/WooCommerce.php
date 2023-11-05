@@ -158,8 +158,8 @@ class WooCommerce
     {
         if (!$conn = $this->callFunc('initFbConnection', true)) return;
         
+        $order = wc_get_order($orderId);
         if (!$this->invoice) {
-            $order = wc_get_order($orderId);
             $invoiceId = (int) $order->get_meta('_wcfb_invoice_id');
             $this->invoice = $conn->invoice()->getById($invoiceId);
         }
