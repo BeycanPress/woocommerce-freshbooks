@@ -138,7 +138,7 @@ class WooCommerce
                 $this->invoice->sendToEMail($email);
             }
 
-            do_action('wcfb_invoice_created', $this->invoice, $order);
+            do_action('wcfb_invoice_created', $conn, $order, $this->invoice);
 
             $this->paymentCompleted($orderId);
 
@@ -175,7 +175,7 @@ class WooCommerce
                 ->setType("Other")
                 ->create();
                 
-                do_action('wcfb_payment_completed', $this->invoice, $order);
+                do_action('wcfb_payment_completed', $conn, $order, $this->invoice);
             } catch (\Throwable $th) {
                 
                 wp_mail(get_option('admin_email'), 'FreshBooks Payment Add Error', $th->getMessage());
