@@ -112,6 +112,8 @@ class WooCommerce
     
                 if ($totalOrderValue > 0) {
                     $discountRate = ($totalDiscount / $totalOrderValue) * 100;
+                    $decimals = intval(get_option('woocommerce_price_num_decimals'));
+                    $discountRate = round($discountRate, $decimals);
                 } else {
                     $discountRate = 0; 
                 }
