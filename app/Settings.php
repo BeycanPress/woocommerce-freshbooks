@@ -107,6 +107,13 @@ class Settings extends Setting
                     'help'    => esc_html__('If you want create invoice for order, you can enable this setting.', 'wcfb')
                 ),
                 array(
+                    'id'      => 'addDiscountData',
+                    'title'   => esc_html__('Invoice with discount data', 'wcfb'),
+                    'type'    => 'switcher',
+                    'default' => false,
+                    'help'    => esc_html__('Use this if you have set decimal to at least 2 in your store\'s settings, otherwise data incompatibility will occur.', 'wcfb')
+                ),
+                array(
                     'id'      => 'sendToEmail',
                     'title'   => esc_html__('Send to email', 'wcfb'),
                     'type'    => 'switcher',

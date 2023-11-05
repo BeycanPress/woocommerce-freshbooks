@@ -70,10 +70,12 @@ class WooCommerce
 
             foreach ($order->get_items() as $item) {
                 
+                $itemPrice = $this->setting('addDiscountData') ? $item->get_subtotal() : $item->get_total();
+                
                 $line = (new InvoiceLine())
                 ->setName($item->get_name())
                 ->setAmount((object) [
-                    "amount" => ($item->get_subtotal() / $item->get_quantity()),
+                    "amount" => ($itemPrice / $item->get_quantity()),
                     "code" => $order->get_currency()
                 ])
                 ->setQuantity($item->get_quantity());
@@ -103,24 +105,26 @@ class WooCommerce
             ->setCreateDate(date("Y-m-d"))
             ->setLines($lines);
 
-            $totalDiscount = $order->get_total_discount(); 
-
-            if ($totalDiscount > 0) {
-                $discountCodes = $order->get_coupon_codes(); 
-                $discountCodes = implode(',', $discountCodes);
-                $totalOrderValue = $order->get_subtotal();
+            if ($this->setting('addDiscountData')) {
+                $totalDiscount = $order->get_total_discount(); 
     
-                if ($totalOrderValue > 0) {
-                    $discountRate = ($totalDiscount / $totalOrderValue) * 100;
-                    $decimals = intval(get_option('woocommerce_price_num_decimals'));
-                    $discountRate = round($discountRate, $decimals);
-                } else {
-                    $discountRate = 0; 
+                if ($totalDiscount > 0) {
+                    $discountCodes = $order->get_coupon_codes(); 
+                    $discountCodes = implode(',', $discountCodes);
+                    $totalOrderValue = $order->get_subtotal();
+        
+                    if ($totalOrderValue > 0) {
+                        $discountRate = ($totalDiscount / $totalOrderValue) * 100;
+                        $decimals = intval(get_option('woocommerce_price_num_decimals'));
+                        $discountRate = round($discountRate, $decimals);
+                    } else {
+                        $discountRate = 0; 
+                    }
+    
+                    $this->invoice
+                    ->setDiscountValue($discountRate)
+                    ->setDiscountDescription($discountCodes);
                 }
-
-                $this->invoice
-                ->setDiscountValue($discountRate)
-                ->setDiscountDescription($discountCodes);
             }
 
             $this->invoice->create();
