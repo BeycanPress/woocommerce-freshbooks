@@ -11,7 +11,7 @@ class Loader extends PluginHero\Plugin
      */
     private $conn;
 
-    public function __construct($pluginFile)
+    public function __construct(string $pluginFile)
     {
         parent::__construct([
             'pluginFile' => $pluginFile,
@@ -58,6 +58,8 @@ class Loader extends PluginHero\Plugin
         if ($this->setting('createInvoice')) {
             new WooCommerce();
         }
+
+        new OtherPlugins($pluginFile);
     }
 
     public function adminProcess() : void
