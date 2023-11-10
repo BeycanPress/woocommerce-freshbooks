@@ -5,7 +5,7 @@
  * Version:     1.1.0
  * Author URI:  https://beycanpress.com/
  * Description: WooCommerce FreshBooks Integration
- * Author:      BeycanPress
+ * Author:      BeycanPress LLC
  * Author URI:  https://beycanpress.com/
  * License:     MIT
  * License URI: https://github.com/BeycanPress/woocommerce-freshbooks-plugin/blob/master/LICENSE
