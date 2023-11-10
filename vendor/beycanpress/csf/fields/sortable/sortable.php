@@ -28,6 +28,10 @@ if ( ! class_exists( 'CSF_Field_sortable' ) ) {
         foreach ( $this->field['fields'] as $key => $field ) {
           $pre_fields[$field['id']] = $field;
         }
+      } else {
+        $messageExists = isset($this->field['no_fields_message']) && !empty($this->field['no_fields_message']);
+        $message = $messageExists ? esc_html($this->field['no_fields_message']) : esc_html__( 'Please define fields for sortable.', 'csf' );
+        echo '<p>'. $message .'</p>';
       }
 
       // Set sort by by saved-value or default-value
