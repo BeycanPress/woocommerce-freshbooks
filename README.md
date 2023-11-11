@@ -18,13 +18,13 @@ This extension has been developed with the [BeycanPress/FreshBooks](https://gith
 
 1. Go to the [FreshBooks Developer Portal](https://my.freshbooks.com/#/developer) and click on the **Create an App** button.
 
-![Screenshot 1](https://i.ibb.co/7v5nF5r/Screenshot-1.png)
+![Screenshot 1](https://i.postimg.cc/j24WYF3t/Screenshot-1.png)
 
-![Screenshot 2](https://i.ibb.co/tJP5Vmp/Screenshot-2.png)
+![Screenshot 2](https://i.postimg.cc/wjG1zJ2y/Screenshot-2.png)
 
 ### Enter Your APP Information
 
-![Screenshot 3](https://i.ibb.co/99Bdrfk/Screenshot-3.png)
+![Screenshot 3](https://i.postimg.cc/htjXNMLR/Screenshot-3.png)
 
 ### Enter Your APP Scope
 
@@ -38,7 +38,7 @@ When selecting the scopes, you should definitely choose the scopes indicated in 
 `user:payments:read`
 `user:payments:write`
 
-![Screenshot 4](https://i.ibb.co/vjpSFQZ/Screenshot-4.png)
+![Screenshot 4](https://i.postimg.cc/63dqCPXn/Screenshot-4.png)
 
 ### Enter Your APP Redirect URI
 
@@ -50,13 +50,13 @@ Here you definitely need to enter the API URL of our plugin after your domaniniz
 
 ### Save Your APP
 
-![Screenshot 5](https://i.ibb.co/rsxTx8f/Screenshot-5.png)
+![Screenshot 5](https://i.postimg.cc/fT53H10v/Screenshot-5.png)
 
 ### Enter Your APP and Copy Your APP ID and APP Secret
 
-![Screenshot 6](https://i.ibb.co/S5bL6Fx/Screenshot-6.png)
+![Screenshot 6](https://i.postimg.cc/W4qh13Y9/Screenshot-6.png)
 
-![Screenshot 7](https://i.ibb.co/2nVdFH8/Screenshot-7.png)
+![Screenshot 7](https://i.postimg.cc/d3w169sX/Screenshot-7.png)
 
 ### In WP-Admin, click on the WC FreshBooks Settings Menu
 
@@ -66,19 +66,19 @@ After entering your APP ID and APP Secret code, click save above and the page wi
 
 Then press the "connect" button.
 
-![Screenshot 8](https://i.ibb.co/g47ZVwQ/Screenshot-8.png)
+![Screenshot 8](https://i.postimg.cc/4dCn7grX/Screenshot-8.png)
 
 ### After Clicking the Connect Button
 
 You will be redirected to the FreshBooks login page. After logging in, you will be asked to allow the application. Click the "Allow" button.
 
-![Screenshot 9](https://i.ibb.co/pn6Y5Zn/Screenshot-9.png)
+![Screenshot 9](https://i.postimg.cc/MH5GFjXG/Screenshot-9.png)
 
 ### After All These Steps
 
 Here you will see the business memberships or accounts in your FreshBooks account. Select the one that suits you and click save again.
 
-![Screenshot 10](https://i.ibb.co/tbBYZNY/Screenshot-10.png)
+![Screenshot 10](https://i.postimg.cc/zXDvRpPH/Screenshot-10.png)
 
 ### Settings
 
@@ -94,4 +94,4 @@ If you want to send the invoice to the customer's email address, you can activat
 
 If you want to exclude some payment methods, you can select them here. The invoice creation process will not work when payment is made with the methods you have selected here.
 
-![Screenshot 11](https://i.ibb.co/7v5nF5r/Screenshot-11.png)
+![Screenshot 11](https://i.postimg.cc/X72JKFTH/Screenshot-11.png)
