@@ -4,8 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11a5366a10514dd87149ec10bfdec1d9",
+    "content-hash": "eb688a1aade65f8ce223f7fc7f8d16e9",
     "packages": [
+        {
+            "name": "beycanpress/csf",
+            "version": "2.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BeycanPress/csf.git",
+                "reference": "acd7bd2feae1861f56c7669dadec629b22fae582"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BeycanPress/csf/zipball/acd7bd2feae1861f56c7669dadec629b22fae582",
+                "reference": "acd7bd2feae1861f56c7669dadec629b22fae582",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "description": "Codestar Framework composer package",
+            "homepage": "https://github.com/BeycanPress/csf",
+            "support": {
+                "issues": "https://github.com/BeycanPress/csf/issues",
+                "source": "https://github.com/BeycanPress/csf/tree/2.3.2"
+            },
+            "time": "2023-10-11T17:19:44+00:00"
+        },
         {
             "name": "beycanpress/freshbooks",
             "version": "0.1.2",

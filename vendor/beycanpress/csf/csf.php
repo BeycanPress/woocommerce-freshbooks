@@ -5,6 +5,9 @@
  * @author    Codestar <info@codestarthemes.com>
  * @link      http://codestarframework.com
  * @copyright 2015-2022 Codestar
+ * @version   2.3.1
  *
  */
-require_once plugin_dir_path( __FILE__ ) .'classes/setup.class.php';
+if (!class_exists('CSF')) {
+    require_once plugin_dir_path( __FILE__ ) .'classes/setup.class.php';
+}

@@ -2449,6 +2449,7 @@
 
             })
             .fail( function( response ) {
+              response = JSON.parse( response );
               alert( response.error );
             });
 
@@ -2527,7 +2528,7 @@
       if ( $form.attr('id') === 'addtag' ) {
 
         var $submit = $form.find('#submit'),
-            $cloned = $this.find('.csf-field').csf_clone();
+            $cloned = $this.children('.csf-field').csf_clone();
 
         $submit.on( 'click', function() {
 
