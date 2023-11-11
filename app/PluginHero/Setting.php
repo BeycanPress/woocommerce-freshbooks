@@ -46,7 +46,7 @@ abstract class Setting
             'show_all_options'        => true,
             'sticky_header'           => true,
             'save_defaults'           => true,
-            'ajax_save'               => true,
+            'ajax_save'               => false,
             
             // database model
             'transient_time'          => 0,
