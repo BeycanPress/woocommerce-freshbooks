@@ -28,6 +28,12 @@ add_action('before_woocommerce_init', function() {
 add_action('plugins_loaded', function() {
     if (function_exists('WC')) {
         require __DIR__ . '/vendor/autoload.php';
+
+        $GLOBALS['wcfb_payment_methods'] = [];
+        foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
+            $GLOBALS['wcfb_payment_methods'][$key] = $value->title;
+        }
+
         new \BeycanPress\WooCommerce\FreshBooks\Loader(__FILE__);
     }
 });
