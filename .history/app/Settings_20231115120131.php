@@ -89,11 +89,10 @@ class Settings extends Setting
             )
         ));
 
-        $gateways = [];
+        $GLOBALS['wcfb_payment_methods'] = [];
         foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
-            $gateways[$key] = $value->title;
+            $GLOBALS['wcfb_payment_methods'][$key] = $value->title;
         }
-        
         self::createSection(array(
             'id'     => 'invoiceSettings', 
             'title'  => esc_html__('Invoice settings', 'wcfb'),

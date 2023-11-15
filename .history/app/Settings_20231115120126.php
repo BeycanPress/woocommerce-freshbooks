@@ -89,10 +89,6 @@ class Settings extends Setting
             )
         ));
 
-        $gateways = [];
-        foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
-            $gateways[$key] = $value->title;
-        }
         
         self::createSection(array(
             'id'     => 'invoiceSettings', 
