@@ -46,7 +46,10 @@ class Loader extends PluginHero\Plugin
                         return null;
                     }
                 } catch (\Throwable $th) {
-                    $this->debug($th->getMessage(), 'CRITICAL');
+                    $this->debug($th->getMessage(), 'CRITICAL', [
+                        'file' => $th->getFile(),
+                        'line' => $th->getLine()
+                    ]);
                     $this->updateSetting('connected', false);
                     return null;
                 }

@@ -48,7 +48,10 @@ class Api extends PluginHero\Api
             $this->updateSetting('account', $account->getId());
             $this->redirect(admin_url('admin.php?page=wcfb_settings'));
         } catch (\Throwable $th) {
-            $this->debug($th->getMessage(), 'CRITICAL');
+            $this->debug($th->getMessage(), 'CRITICAL', [
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
         }
     }
 
@@ -63,7 +66,10 @@ class Api extends PluginHero\Api
             $this->updateSetting('connected', true);
             Response::success();
         } catch (\Throwable $th) {
-            $this->debug($th->getMessage(), 'CRITICAL');
+            $this->debug($th->getMessage(), 'CRITICAL', [
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
         }
     }
 

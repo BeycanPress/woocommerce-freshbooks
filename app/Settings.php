@@ -27,7 +27,10 @@ class Settings extends Setting
                 $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
             }
         } catch (\Exception $e) {
-            $this->debug($e->getMessage(), 'CRITICAL');
+            $this->debug($e->getMessage(), 'CRITICAL', [
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
             $this->updateSetting('connected', false);
             $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
         }
