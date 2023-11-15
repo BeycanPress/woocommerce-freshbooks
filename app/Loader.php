@@ -18,7 +18,7 @@ class Loader extends PluginHero\Plugin
             'textDomain' => 'wcfb',
             'pluginKey' => 'wcfb',
             'settingKey' => 'wcfb_settings',
-            'pluginVersion' => '1.1.1',
+            'pluginVersion' => '1.1.2',
             'debugging' => true,
         ]);
 
@@ -31,7 +31,7 @@ class Loader extends PluginHero\Plugin
                         $this->conn = new Connection(
                             $this->setting('clientId'),
                             $this->setting('clientSecret'),
-                            home_url('/wp-json/wcfb/get-access-token')
+                            'https://test.beycanpress.net/get-access-token'
                         );
 
                         if ($authenticate && file_exists($this->conn->getTokenFile())) {
@@ -47,6 +47,7 @@ class Loader extends PluginHero\Plugin
                     }
                 } catch (\Throwable $th) {
                     $this->debug($th->getMessage(), 'CRITICAL', [
+                        'trace' => $th->getTrace(),
                         'file' => $th->getFile(),
                         'line' => $th->getLine()
                     ]);

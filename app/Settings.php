@@ -28,6 +28,7 @@ class Settings extends Setting
             }
         } catch (\Exception $e) {
             $this->debug($e->getMessage(), 'CRITICAL', [
+                'trace' => $e->getTrace(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
             ]);

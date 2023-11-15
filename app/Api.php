@@ -49,6 +49,7 @@ class Api extends PluginHero\Api
             $this->redirect(admin_url('admin.php?page=wcfb_settings'));
         } catch (\Throwable $th) {
             $this->debug($th->getMessage(), 'CRITICAL', [
+                'trace' => $th->getTrace(),
                 'file' => $th->getFile(),
                 'line' => $th->getLine()
             ]);
@@ -67,6 +68,7 @@ class Api extends PluginHero\Api
             Response::success();
         } catch (\Throwable $th) {
             $this->debug($th->getMessage(), 'CRITICAL', [
+                'trace' => $th->getTrace(),
                 'file' => $th->getFile(),
                 'line' => $th->getLine()
             ]);

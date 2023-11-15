@@ -145,6 +145,7 @@ class WooCommerce
             wp_mail(get_option('admin_email'), 'FreshBooks Invoice Create Error', $th->getMessage());
 
             $this->debug($th->getMessage(), 'CRITICAL', [
+                'trace' => $th->getTrace(),
                 'file' => $th->getFile(),
                 'line' => $th->getLine()
             ]);
@@ -182,6 +183,7 @@ class WooCommerce
                 wp_mail(get_option('admin_email'), 'FreshBooks Payment Add Error', $th->getMessage());
 
                 $this->debug($th->getMessage(), 'CRITICAL', [
+                    'trace' => $th->getTrace(),
                     'file' => $th->getFile(),
                     'line' => $th->getLine()
                 ]);
