@@ -173,7 +173,7 @@ class WooCommerce
 
                 if ($gateway == 'stripe' || strpos($gateway, 'stripe') !== false) {
                     $type = 'Credit Card';
-                } else if (
+                } elseif (
                     $gateway == 'ppcp' || 
                     $gateway == 'paypal' ||
                     $gateway == 'ppec_paypal' ||
@@ -185,11 +185,11 @@ class WooCommerce
                     (strpos($gateway, 'paypal') !== false || strpos($gateway, 'ppcp') !== false)
                 ) {
                     $type = 'PayPal';
-                } else if ($gateway == 'bacs') {
+                } elseif ($gateway == 'bacs') {
                     $type = 'Bank Transfer';
-                } else if ($gateway == 'cod') {
+                } elseif ($gateway == 'cod') {
                     $type = 'Cash';
-                } else if ($gateway == 'cheque') {
+                } elseif ($gateway == 'cheque') {
                     $type = 'Check';
                 } else {
                     $type = "Other";
