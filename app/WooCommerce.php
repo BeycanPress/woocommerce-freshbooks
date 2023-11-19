@@ -168,7 +168,34 @@ class WooCommerce
 
         if (floatval($this->invoice->getOutstanding()->amount) > 0) {
             try {
-                $type = apply_filters('wcfb_payment_type', "Other", $conn, $order, $this->invoice);
+                
+                $gateway = $order->get_payment_method();
+
+                if ($gateway == 'stripe' || strpos($gateway, 'stripe') !== false) {
+                    $type = 'Credit Card';
+                } else if (
+                    $gateway == 'ppcp' || 
+                    $gateway == 'paypal' ||
+                    $gateway == 'ppec_paypal' ||
+                    $gateway == 'ppcp-gateway' ||
+                    $gateway == 'ppcp-oxxo-gateway' ||
+                    $gateway == 'ppcp-card-button-gateway' ||
+                    $gateway == 'ppcp-credit-card-gateway' ||
+                    $gateway == 'ppcp-pay-upon-invoice-gateway' ||
+                    (strpos($gateway, 'paypal') !== false || strpos($gateway, 'ppcp') !== false)
+                ) {
+                    $type = 'PayPal';
+                } else if ($gateway == 'bacs') {
+                    $type = 'Bank Transfer';
+                } else if ($gateway == 'cod') {
+                    $type = 'Cash';
+                } else if ($gateway == 'cheque') {
+                    $type = 'Check';
+                } else {
+                    $type = "Other";
+                }
+
+                $type = apply_filters('wcfb_payment_type', $type, $conn, $order, $this->invoice);
 
                 $conn->payment()
                 ->setInvoiceId($this->invoice->getId())
