@@ -168,13 +168,15 @@ class WooCommerce
 
         if (floatval($this->invoice->getOutstanding()->amount) > 0) {
             try {
+                $type = apply_filters('wcfb_payment_type', "Other", $conn, $order, $this->invoice);
+
                 $conn->payment()
                 ->setInvoiceId($this->invoice->getId())
                 ->setAmount((object) [
                     "amount" => $this->invoice->getOutstanding()->amount
                 ])
                 ->setDate(date("Y-m-d"))
-                ->setType("Other")
+                ->setType($type)
                 ->create();
                 
                 do_action('wcfb_payment_completed', $conn, $order, $this->invoice);
