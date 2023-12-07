@@ -4,6 +4,8 @@ namespace BeycanPress\WooCommerce\FreshBooks\PluginHero;
 
 class Entity
 {
+    use Helpers;
+    
     /**
      * @var object
      */

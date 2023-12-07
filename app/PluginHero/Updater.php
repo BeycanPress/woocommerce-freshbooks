@@ -5,30 +5,60 @@ namespace BeycanPress\WooCommerce\FreshBooks\PluginHero;
 class Updater
 {
     use Helpers;
-
+    
     /**
      * @var array
      */
     private $data = [];
+
+    /**
+     * @var array
+     */
+    private $config = [];
+
+    /**
+     * @var string
+     */
+    private $updaterApi = 'https://updater.beycanpress.net';
 
 	/**
      * @param array $params
      */
 	public function __construct(array $data = []) 
     {
-        if ($this->setting('license')) {
-			$this->data = $data;
+		global $pagenow;
 
-			/* Updater Config */
-			$this->config = array(
-				'server'  => 'https://updater.beycanpress.net',
-				'id'      => $this->data['plugin_file'],
-				'api'     => $this->pluginVersion,
-			);
+        if ($pagenow == 'update-core.php' || $pagenow == 'plugins.php' || $pagenow == 'update.php') {
+			try {
+				$ch = curl_init($this->updaterApi);
 
-			add_action('admin_init', array($this, 'adminInit'));
-			add_filter('upgrader_post_install', array($this, 'installFolder'), 11, 3);
-		}
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+				$response = curl_exec($ch);
+
+				curl_close($ch);
+				
+				$exists = ($response !== false);
+			} catch (\Throwable $th) {
+				$exists = false;
+			}	
+        } else {
+            $exists = true;
+        }
+
+        if ($this->setting('license') && $exists) {
+            $this->data = $data;
+
+            /* Updater Config */
+            $this->config = array(
+                'server'  => $this->updaterApi,
+                'id'      => $this->data['plugin_file'],
+                'api'     => $this->data['plugin_version'],
+            );
+
+            add_action('admin_init', array($this, 'adminInit'));
+            add_filter('upgrader_post_install', array($this, 'installFolder'), 11, 3);
+        }
 	}
 
 	/**

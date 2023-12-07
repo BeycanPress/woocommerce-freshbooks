@@ -30,11 +30,11 @@ abstract class Plugin
         self::$instance = $this;
 
         self::$properties = (object) array_merge($properties, [
+            'phVersion' => '0.2.2',
+            'phDir'     => trailingslashit(__DIR__),
             'pluginUrl' => plugin_dir_url($properties['pluginFile']),
             'pluginDir' => plugin_dir_path($properties['pluginFile']),
-            'viewDir'   => trailingslashit(plugin_dir_path($properties['pluginFile']) . 'views'),
-            'phDir'     => trailingslashit(__DIR__)
-        ]);
+        ], (array) $this->getPluginData($properties['pluginFile']));
         
         if (file_exists($this->pluginDir . 'vendor/beycanpress/csf/csf.php')) {
             require_once $this->pluginDir . 'vendor/beycanpress/csf/csf.php';
@@ -73,12 +73,28 @@ abstract class Plugin
     }
 
     /**
+     * @return Plugin
+     */
+    public static function getInstance() : Plugin
+    {
+        return self::$instance;
+    }
+
+    /**
      * @param string $property
      * @return mixed
      */
-    public static function getProperty(string $property) : mixed
+    public static function getProperty(string $property)
     {
-        return isset(Plugin::$properties->$property) ? Plugin::$properties->$property : null;
+        return isset(self::$properties->$property) ? self::$properties->$property : null;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getKey() : string
+    {
+        return Plugin::getProperty('key');
     }
 
     /**
