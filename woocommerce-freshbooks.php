@@ -13,7 +13,7 @@
  * Domain Path: /languages
  * Tags: WooCommerce, FreshBooks, Integration
  * Requires at least: 5.0
- * Tested up to: 6.2
+ * Tested up to: 6.4.2
  * Requires PHP: 7.4
  * WC requires at least: 4.4
  * WC tested up to: 7.5
