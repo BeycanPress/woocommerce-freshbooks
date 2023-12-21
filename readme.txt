@@ -4,8 +4,8 @@ Tags: woocommerce, automation, freshbooks, invoicing, accounting
 Requires at least: 5.0
 Tested up to: 6.4.2
 Requires PHP: 7.4
-Stable Tag: 1.1.0
-Version: 1.1.0
+Stable Tag: 1.1.3
+Version: 1.1.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
