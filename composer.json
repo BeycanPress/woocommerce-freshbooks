@@ -5,7 +5,7 @@
         }
     },
     "require": {
-        "beycanpress/freshbooks": "0.1.5",
+        "beycanpress/freshbooks": "^0.1.5",
         "beycanpress/csf": "^2.3"
     }
 }
