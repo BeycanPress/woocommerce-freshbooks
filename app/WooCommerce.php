@@ -107,11 +107,11 @@ class WooCommerce
 
             if ($this->setting('addDiscountData')) {
                 $totalDiscount = $order->get_total_discount(); 
-                $discountCodes = $order->get_coupon_codes(); 
-                $discountCodes = implode(',', $discountCodes);
     
-                if ($totalDiscount > 0 && $discountCodes) {
+                if ($totalDiscount > 0) {
                     $totalOrderValue = $order->get_subtotal();
+                    $discountCodes = $order->get_coupon_codes(); 
+                    $discountCodes = implode(',', $discountCodes);
         
                     if ($totalOrderValue > 0) {
                         $discountRate = ($totalDiscount / $totalOrderValue) * 100;
