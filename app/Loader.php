@@ -75,7 +75,7 @@ class Loader extends PluginHero\Plugin
         ) {
             add_action('admin_enqueue_scripts', function() {
                 if ($conn = $this->callFunc('initFbConnection')) {
-                    $key = $this->addScript('js/admin.js', ['jquery']);
+                    $key = $this->addScript('admin.js', ['jquery']);
                     wp_localize_script($key, 'WCFB', [
                         'ajaxUrl' => admin_url('admin-ajax.php'),
                         'nonce' => $this->createNewNonce(),
