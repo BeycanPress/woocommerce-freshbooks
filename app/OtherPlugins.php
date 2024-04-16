@@ -15,7 +15,7 @@ class OtherPlugins
      */
     public function __construct(string $pluginFile)
     {
-        if (!isset($GLOBALS['admin_page_hooks']['beycanpress-plugins'])) {
+        if (!isset($GLOBALS['beycanpress-plugins'])) {
             add_action('admin_menu', function() use ($pluginFile) {
                 add_menu_page( 
                     esc_html__('BeycanPress Plugins', 'wcfb'),
@@ -26,7 +26,7 @@ class OtherPlugins
                     plugin_dir_url($pluginFile) . 'assets/images/beycanpress.png',
                 );
             });
-            $GLOBALS['admin_page_hooks']['beycanpress-plugins'] = true;
+            $GLOBALS['beycanpress-plugins'] = true;
         }
     }
 
