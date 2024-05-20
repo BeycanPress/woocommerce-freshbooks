@@ -18,7 +18,7 @@ class Loader extends PluginHero\Plugin
             'textDomain' => 'wcfb',
             'pluginKey' => 'wcfb',
             'settingKey' => 'wcfb_settings',
-            'pluginVersion' => '1.1.3',
+            'pluginVersion' => '1.1.4',
             'debugging' => true,
         ]);
 

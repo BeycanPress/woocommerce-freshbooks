@@ -20,6 +20,8 @@ class WooCommerce
      */
     private $invoice;
 
+    private $metaKey = 'freshbooks_invoice_id';
+
     public function __construct()
     {
         add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
@@ -41,7 +43,7 @@ class WooCommerce
                 return;
             }
             
-            if ($order->get_meta('_wcfb_invoice_id')) {
+            if ((int) get_post_meta($orderId, $this->metaKey, true)) {
                 return;
             }
 
@@ -126,11 +128,7 @@ class WooCommerce
             }
 
             $this->invoice->create();
-
-            if ($this->invoice) {
-                $order->update_meta_data('_wcfb_invoice_id', $this->invoice->getId());
-                $order->save();
-            }
+            update_post_meta($orderId, $this->metaKey, $this->invoice->getId());
 
             if ($this->setting('sendToEmail')) {
                 $this->invoice->sendToEMail($email);

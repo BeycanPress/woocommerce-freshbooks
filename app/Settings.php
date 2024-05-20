@@ -94,8 +94,16 @@ class Settings extends Setting
         ));
 
         $gateways = [];
-        foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
-            $gateways[$key] = $value->title;
+        try {
+            foreach (WC()->payment_gateways->get_available_payment_gateways() as $key => $value) {
+                $gateways[$key] = $value->title;
+            }
+        } catch (\Throwable $th) {
+            $this->debug($th->getMessage(), 'CRITICAL', [
+                'trace' => $th->getTrace(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
         }
         
         self::createSection(array(
