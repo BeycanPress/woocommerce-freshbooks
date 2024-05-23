@@ -129,6 +129,7 @@ class WooCommerce
 
             $this->invoice->create();
             update_post_meta($orderId, $this->metaKey, $this->invoice->getId());
+            update_post_meta($orderId, 'freshbooks_invoice_number', $this->invoice->getInvoiceNumber());
 
             if ($this->setting('sendToEmail')) {
                 $this->invoice->sendToEMail($email);
