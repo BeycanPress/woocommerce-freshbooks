@@ -24,8 +24,20 @@ class WooCommerce
 
     public function __construct()
     {
+        $this->dailyInvoiceCreatedOrderIdsReset();
         add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'backend'], 10);
+    }
+
+    public function dailyInvoiceCreatedOrderIdsReset()
+    {
+        $today = date('Y-m-d');
+        $lastReset = get_option('wcfb_invoice_created_order_ids_reset', '');
+
+        if ($today != $lastReset) {
+            update_option('wcfb_invoice_created_order_ids', []);
+            update_option('wcfb_invoice_created_order_ids_reset', $today);
+        }
     }
 
     public function backend($order)
@@ -63,7 +75,8 @@ class WooCommerce
                 return;
             }
 
-            if ((int) get_post_meta($orderId, $this->metaKey, true)) {
+            $invoiceCreatedOrderIds = get_option('wcfb_invoice_created_order_ids', []);
+            if (in_array($orderId, $invoiceCreatedOrderIds)) {
                 return;
             }
 
@@ -148,6 +161,8 @@ class WooCommerce
             }
 
             $this->invoice->create();
+            $invoiceCreatedOrderIds[] = $orderId;
+            update_option('wcfb_invoice_created_order_ids', $invoiceCreatedOrderIds);
             update_post_meta($orderId, $this->metaKey, $this->invoice->getId());
             update_post_meta($orderId, 'freshbooks_invoice_number', $this->invoice->getInvoiceNumber());
             update_post_meta($orderId, 'freshbooks_invoice_account_id', $this->invoice->getAccountId());
