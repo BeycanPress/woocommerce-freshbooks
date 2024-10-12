@@ -63,9 +63,10 @@ trait Helpers
     /**
      * Easy use for get_option
      * @param string $setting
+     * @param mixed $default
      * @return mixed
      */
-    public function setting(string $setting = null): mixed
+    public function setting(string $setting = null, mixed $default = null): mixed
     {
         if (is_null(Loader::$settings)) {
             Loader::$settings = get_option($this->settingKey);
@@ -75,7 +76,7 @@ trait Helpers
             return Loader::$settings;
         }
 
-        return isset(Loader::$settings[$setting]) ? Loader::$settings[$setting] : null;
+        return isset(Loader::$settings[$setting]) ? Loader::$settings[$setting] : $default;
     }
 
     /**

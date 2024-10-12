@@ -88,7 +88,9 @@ class WooCommerce
             $order = wc_get_order($orderId);
 
             $paymentMethod = $order->get_payment_method();
-            if (in_array($paymentMethod, $this->setting('excludePaymentMethods'))) {
+            $excludePaymentMethods = $this->setting('excludePaymentMethods', []);
+            $excludePaymentMethods = is_array($excludePaymentMethods) ? $excludePaymentMethods : [];
+            if (in_array($paymentMethod, $excludePaymentMethods)) {
                 return;
             }
 
