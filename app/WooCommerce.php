@@ -13,14 +13,9 @@ class WooCommerce
     use Helpers;
 
     /**
-     * @var Connection
+     * @var Invoice|null
      */
-    private Connection $conn;
-
-    /**
-     * @var Invoice
-     */
-    private Invoice $invoice;
+    private ?Invoice $invoice = null;
 
     /**
      * @var string
