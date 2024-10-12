@@ -1,11 +1,11 @@
-=== WooCommerce FreshBooks Integration ===
+=== FreshBooks Integration for WooCommerce ===
 Contributors: BeycanPress
 Tags: woocommerce, automation, freshbooks, invoicing, accounting
 Requires at least: 5.0
-Tested up to: 6.4.2
-Requires PHP: 7.4
-Stable Tag: 1.1.3
-Version: 1.1.3
+Tested up to: 6.6.2
+Requires PHP: 8.1
+Stable Tag: 1.1.5
+Version: 1.1.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -21,7 +21,7 @@ Our plugin uses the FreshBooks API so you can automatically invoice your custome
 
 In this way, you can easily issue automatic invoices for users and manage invoices.
 
-See: **<a href="https://github.com/BeycanPress/woocommerce-freshbooks-plugin" target="_blank">Documentation</a>**
+See: **<a href="https://github.com/BeycanPress/woocommerce-freshbooks" target="_blank">Documentation</a>**
 
 = Privacy notices =
 

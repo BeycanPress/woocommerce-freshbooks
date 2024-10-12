@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace BeycanPress\FreshBooks\Model;
 
@@ -7,25 +9,26 @@ use BeycanPress\FreshBooks\Connection;
 class ClientList
 {
     /**
-     * @var array
+     * @var array<Client>
      */
-    private $list = [];
+    private array $list = [];
 
     /**
-     * @var Connection
+     * @param Connection $conn
      */
     public function __construct(Connection $conn)
     {
-        foreach ($conn->get('users/clients') as $value) {
-            $this->list[] = (new Client($conn))->fromObject($value);
+        foreach ($conn->get('users/clients')->clients as $value) {
+            $this->list[] = (new Client($conn))->fromObject((object) $value);
         }
     }
 
     /**
-     * @return array
+     * @return array<Client>
      */
-    public function getList() : array
+    public function getList(): array
     {
+
         return $this->list;
     }
 }

@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.6.6; wp-6.3.2\n"
-"X-Domain: wcfb"
+"X-Domain: woocommerce-freshbooks"
 
 #: app/Settings.php:83
 msgid "Account"

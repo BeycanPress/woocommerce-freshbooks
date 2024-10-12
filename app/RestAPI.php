@@ -1,47 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BeycanPress\WooCommerce\FreshBooks;
 
-use \BeycanPress\Http\Request;
-use \BeycanPress\Http\Response;
-use \BeycanPress\FreshBooks\Connection;
+use BeycanPress\FreshBooks\Connection;
 
-class Api extends PluginHero\Api
+class RestAPI
 {
-    /**
-     * @var Request
-     */
-    private $request;
+    use Helpers;
 
+    /**
+     * constructor
+     */
     public function __construct()
     {
-        $this->addRoutes([
-            'wcfb' => [
-                'get-access-token' => [
-                    'callback' => 'getAccessToken',
-                    'methods' => ['GET']
-                ],
-                'refresh-authentication' => [
-                    'callback' => 'refrestAuthentication',
-                    'methods' => ['GET']
-                ]
-            ]
-        ]);
-
-        $this->request = new Request();
+        add_action('rest_api_init', [$this, 'registerRoutes']);
     }
-    
+
+    /**
+     * @param string $route
+     * @param string $callback
+     * @param string $method
+     * @return void
+     */
+    private function registerRoute(string $route, string $callback, string $method = 'GET'): void
+    {
+        register_rest_route('wcfb', '/' . $route, [
+            'methods' => $method,
+            'callback' => [$this, $callback],
+            'permission_callback' => '__return_true',
+        ]);
+    }
+
+    /**
+     * register routes
+     *
+     * @return void
+     */
+    public function registerRoutes(): void
+    {
+        $this->registerRoute('get-access-token', 'getAccessToken');
+        $this->registerRoute('refresh-authentication', 'refreshAuthentication');
+    }
+
     /**
      * @return void
      */
-    public function getAccessToken()
+    public function getAccessToken(): void
     {
         /** @var Connection */
         $conn = $this->callFunc('initFbConnection');
 
         try {
             $code = $this->request->get('code');
-            if (!$code) die('Code is required.');
+            if (!$code) {
+                die('Code is required.');
+            }
             $conn->getAccessTokenByAuthCode($code);
             $account = $conn->setAccount()->getAccount();
             $this->updateSetting('connected', true);
@@ -59,7 +74,7 @@ class Api extends PluginHero\Api
     /**
      * @return void
      */
-    public function refrestAuthentication()
+    public function refreshAuthentication(): void
     {
         try {
             /** @var Connection */
@@ -74,5 +89,4 @@ class Api extends PluginHero\Api
             ]);
         }
     }
-
 }

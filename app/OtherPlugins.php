@@ -1,26 +1,29 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace BeycanPress\WooCommerce\FreshBooks;
 
 class OtherPlugins
-{   
+{
+    use Helpers;
+
     /**
      * @var string
      */
-    private $apiUrl = 'https://services.beycanpress.com/wp-json/general-data/';
-    
+    private string $apiUrl = 'https://services.beycanpress.com/wp-json/general-data/';
+
     /**
-     * Class construct
-     * @return void
+     * @param string $pluginFile
      */
     public function __construct(string $pluginFile)
     {
         if (!isset($GLOBALS['beycanpress-plugins'])) {
-            add_action('admin_menu', function() use ($pluginFile) {
-                add_menu_page( 
-                    esc_html__('BeycanPress Plugins', 'wcfb'),
-                    esc_html__('BeycanPress Plugins', 'wcfb'),
-                    'manage_options', 
+            add_action('admin_menu', function () use ($pluginFile): void {
+                add_menu_page(
+                    esc_html__('BeycanPress Plugins', 'woocommerce-freshbooks'),
+                    esc_html__('BeycanPress Plugins', 'woocommerce-freshbooks'),
+                    'manage_options',
                     'beycanpress-plugins',
                     [$this, 'page'],
                     plugin_dir_url($pluginFile) . 'assets/images/beycanpress.png',
@@ -33,16 +36,17 @@ class OtherPlugins
     /**
      * @return void
      */
-    public function page() : void
+    public function page(): void
     {
         $res = wp_remote_retrieve_body(wp_remote_get($this->apiUrl . 'get-plugins'));
         $res = json_decode(str_replace(['<p>', '</p>'], '', $res));
         $plugins = $res->data->plugins;
-        
+        $this->addStyle('main.css');
+        // phpcs:disable
         ?>
         <div class="wrap">
             <h1 class="wp-heading-inline">
-                <?php echo esc_html__('BeycanPress Plugins', 'wcfb'); ?>
+                <?php echo esc_html__('BeycanPress Plugins', 'woocommerce-freshbooks'); ?>
             </h1>
             <hr class="wp-header-end">
             <br>
@@ -69,50 +73,7 @@ class OtherPlugins
                 </div>
             </div>
         </div>
-
-        <style>
-            .product-list {
-                display: flex;
-                flex-wrap: wrap;
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            .product-list li {
-                width: 20%;
-                padding: 10px;
-                box-sizing: border-box;
-            }
-
-            .product-list li a {
-                display: block;
-                text-align: center;
-                text-decoration: none;
-                color: #333;
-            }
-
-            .product-list li a img {
-                width: 100%;
-                height: auto;
-                border-radius: 5px;
-                margin-bottom: 10px;
-            }
-
-            @media screen and (max-width: 768px) {
-                .product-list li {
-                    width: 50%;
-                }
-                
-            }
-
-            @media screen and (max-width: 400px) {
-                .product-list li {
-                    width: 100%;
-                }
-                
-            }
-        </style>
         <?php
+        // phpcs:enable
     }
 }

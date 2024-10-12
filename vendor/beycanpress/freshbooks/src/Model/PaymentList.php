@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace BeycanPress\FreshBooks\Model;
 
@@ -7,25 +9,26 @@ use BeycanPress\FreshBooks\Connection;
 class PaymentList
 {
     /**
-     * @var array
+     * @var array<Payment>
      */
-    private $list = [];
+    private array $list = [];
 
     /**
-     * @var Connection
+     * @param Connection $conn
      */
     public function __construct(Connection $conn)
     {
-        foreach ($conn->get('payments/payments') as $value) {
-            $this->list[] = (new Payment($conn))->fromObject($value);
+        foreach ($conn->get('payments/payments')->payments as $value) {
+            $this->list[] = (new Payment($conn))->fromObject((object) $value);
         }
     }
 
     /**
-     * @return array
+     * @return array<Payment>
      */
-    public function getList() : array
+    public function getList(): array
     {
+
         return $this->list;
     }
 }

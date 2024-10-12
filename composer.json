@@ -1,11 +1,15 @@
 {
+    "scripts": {
+        "phpcs": "phpcs --standard=phpcs.xml .",
+        "phpcbf": "phpcbf --standard=phpcs.xml ."
+    },
     "autoload": {
         "psr-4": {
             "BeycanPress\\WooCommerce\\FreshBooks\\": "app"
         }
     },
     "require": {
-        "beycanpress/freshbooks": "^0.1.5",
-        "beycanpress/csf": "^2.3"
+        "beycanpress/freshbooks": "^0.1.6",
+        "beycanpress/csf": "2.4.0"
     }
 }

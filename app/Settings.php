@@ -1,14 +1,67 @@
 <?php
 
+declare(strict_types=1);
+
+// phpcs:disable Generic.Files.LineLength
+// phpcs:disable WordPress.Security.NonceVerification.Recommended
+
 namespace BeycanPress\WooCommerce\FreshBooks;
 
-use \BeycanPress\WooCommerce\FreshBooks\PluginHero\Setting;
+use CSF;
 
-class Settings extends Setting
+class Settings
 {
+    use Helpers;
+
+    /**
+     * constructor
+     */
     public function __construct()
     {
-        parent::__construct(esc_html__('WC FreshBooks Settings', 'wcfb'));
+        CSF::createOptions($this->settingKey, [
+            'framework_title'         => 'WC FreshBooks Settings' . ' <small>By BeycanPress</small>',
+
+            // menu settings
+            'menu_title'              => 'WC FreshBooks Settings',
+            'menu_slug'               => $this->settingKey,
+            'menu_capability'         => 'manage_options',
+            'menu_position'           => 999,
+            'menu_hidden'             => false,
+
+            // menu extras
+            'show_bar_menu'           => false,
+            'show_sub_menu'           => false,
+            'show_network_menu'       => true,
+            'show_in_customizer'      => false,
+
+            'show_search'             => true,
+            'show_reset_all'          => true,
+            'show_reset_section'      => true,
+            'show_footer'             => true,
+            'show_all_options'        => true,
+            'sticky_header'           => true,
+            'save_defaults'           => true,
+            'ajax_save'               => false,
+
+            // database model
+            'transient_time'          => 0,
+
+            // contextual help
+            'contextual_help'         => [],
+
+            // typography options
+            'enqueue_webfont'         => false,
+            'async_webfont'           => false,
+
+            // others
+            'output_css'              => false,
+
+            // theme
+            'theme'                   => 'dark',
+
+            // external default values
+            'defaults'                => [],
+        ]);
 
         $conn = $this->callFunc('initFbConnection', true);
         if (isset($_GET['disconnect'])) {
@@ -24,7 +77,7 @@ class Settings extends Setting
                     $accounts[$account->account_id] = $account->name;
                 }
             } else {
-                $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
+                $accounts['unconnected'] = esc_html__('Unconnected', 'woocommerce-freshbooks');
             }
         } catch (\Exception $e) {
             $this->debug($e->getMessage(), 'CRITICAL', [
@@ -33,65 +86,65 @@ class Settings extends Setting
                 'line' => $e->getLine()
             ]);
             $this->updateSetting('connected', false);
-            $accounts['unconnected'] = esc_html__('Unconnected', 'wcfb');
+            $accounts['unconnected'] = esc_html__('Unconnected', 'woocommerce-freshbooks');
         }
 
-        add_action('admin_head', function() {
+        add_action('admin_head', function (): void {
             echo '<style>
                 .connected-switcher {display: none;}
                 .connected-status {color: green; font-weight: bold;}
                 </style>';
         });
 
-        self::createSection(array(
-            'id'     => 'generalSettings', 
-            'title'  => esc_html__('General settings', 'wcfb'),
+        self::createSection([
+            'id'     => 'generalSettings',
+            'title'  => esc_html__('General settings', 'woocommerce-freshbooks'),
             'icon'   => 'fa fa-cog',
-            'fields' => array(
-                array(
+            'fields' => [
+                [
                     'id'      => 'connected',
-                    'title'   => esc_html__('Connected', 'wcfb'),
+                    'title'   => esc_html__('Connected', 'woocommerce-freshbooks'),
                     'type'    => 'switcher',
                     'default' => false,
                     'class'   => 'connected-switcher',
-                ),
-                array(
+                ],
+                [
                     'id'      => 'clientId',
-                    'title'   => esc_html__('Client ID', 'wcfb'),
+                    'title'   => esc_html__('Client ID', 'woocommerce-freshbooks'),
                     'type'    => 'text',
                     'default' => '',
-                ),
-                array(
+                ],
+                [
                     'id'      => 'clientSecret',
-                    'title'   => esc_html__('Client Secret', 'wcfb'),
+                    'title'   => esc_html__('Client Secret', 'woocommerce-freshbooks'),
                     'type'    => 'text',
                     'default' => '',
-                ),
-                array(
+                ],
+                [
                     'id'      => 'connectedStatus',
-                    'title'   => esc_html__('Connect', 'wcfb'),
+                    'title'   => esc_html__('Connect', 'woocommerce-freshbooks'),
                     'type'    => 'content',
-                    'content' => '<span class="connected-status">' . esc_html__('Connected', 'wcfb') . '</span><br>
-                    <a href="'.$this->getCurrentUrl().'&disconnect=1" class="disconnect-from-freshbooks">' . esc_html__('Disconnect', 'wcfb') . '</a>',
-                    'dependency' => array('connected', '==', true)
-                ),
-                array(
+                    'content' => '<span class="connected-status">' . esc_html__('Connected', 'woocommerce-freshbooks') . '</span><br>
+                    <a href="' . $this->getCurrentUrl() . '&disconnect=1" class="disconnect-from-freshbooks">' . esc_html__('Disconnect', 'woocommerce-freshbooks') . '</a>',
+                    'dependency' => ['connected', '==', true]
+                ],
+                [
                     'id'      => 'connect',
-                    'title'   => esc_html__('Connect', 'wcfb'),
+                    'title'   => esc_html__('Connect', 'woocommerce-freshbooks'),
                     'type'    => 'content',
-                    'content' => (self::get('clientId') && self::get('clientSecret')) ? '<a href="#" class="button button-primary connect-to-freshbooks">' . esc_html__('Connect', 'wcfb') . '</a>' : esc_html__('Before you can connect, you must enter your application credentials. Please do not forget to refresh the page after entering the relevant settings.', 'wcfb'),
-                    'dependency' => array('connected', '==', false)
-                ),
-                array(
+                    'content' => ($this->setting('clientId') && $this->setting('clientSecret')) ? '<a href="#" class="button button-primary connect-to-freshbooks">' . esc_html__('Connect', 'woocommerce-freshbooks') . '</a>' : esc_html__('Before you can connect, you must enter your application credentials. Please do not forget to refresh the page after entering the relevant settings.', 'woocommerce-freshbooks'),
+                    'dependency' => ['connected', '==', false]
+                ],
+                [
                     'id'      => 'account',
-                    'title'   => esc_html__('Account', 'wcfb'),
+                    'title'   => esc_html__('Account', 'woocommerce-freshbooks'),
                     'type'    => 'select',
                     'options' => $accounts,
                     'default' => 'unconnected',
-                    'dependency' => array('connected', '==', true)
-                ),
-            )
-        ));
+                    'dependency' => ['connected', '==', true]
+                ],
+            ]
+        ]);
 
         $gateways = [];
         try {
@@ -105,54 +158,63 @@ class Settings extends Setting
                 'line' => $th->getLine()
             ]);
         }
-        
-        self::createSection(array(
-            'id'     => 'invoiceSettings', 
-            'title'  => esc_html__('Invoice settings', 'wcfb'),
+
+        self::createSection([
+            'id'     => 'invoiceSettings',
+            'title'  => esc_html__('Invoice settings', 'woocommerce-freshbooks'),
             'icon'   => 'fas fa-file-alt',
-            'fields' => array(
-                array(
+            'fields' => [
+                [
                     'id'      => 'createInvoice',
-                    'title'   => esc_html__('Create invoice', 'wcfb'),
+                    'title'   => esc_html__('Create invoice', 'woocommerce-freshbooks'),
                     'type'    => 'switcher',
                     'default' => false,
-                    'help'    => esc_html__('If you want create invoice for order, you can enable this setting.', 'wcfb')
-                ),
-                array(
+                    'help'    => esc_html__('If you want create invoice for order, you can enable this setting.', 'woocommerce-freshbooks')
+                ],
+                [
                     'id'      => 'addDiscountData',
-                    'title'   => esc_html__('Invoice with discount data', 'wcfb'),
+                    'title'   => esc_html__('Invoice with discount data', 'woocommerce-freshbooks'),
                     'type'    => 'switcher',
                     'default' => false,
-                    'help'    => esc_html__('Use this if you have set decimal to at least 2 in your store\'s settings, otherwise data incompatibility will occur.', 'wcfb')
-                ),
-                array(
+                    'help'    => esc_html__('Use this if you have set decimal to at least 2 in your store\'s settings, otherwise data incompatibility will occur.', 'woocommerce-freshbooks')
+                ],
+                [
                     'id'      => 'sendToEmail',
-                    'title'   => esc_html__('Send to email', 'wcfb'),
+                    'title'   => esc_html__('Send to email', 'woocommerce-freshbooks'),
                     'type'    => 'switcher',
                     'default' => false,
-                    'help'    => esc_html__('If you want to send invoice to customer email, you can enable this setting.', 'wcfb')
-                ),
-                array(
+                    'help'    => esc_html__('If you want to send invoice to customer email, you can enable this setting.', 'woocommerce-freshbooks')
+                ],
+                [
                     'id'       => 'excludePaymentMethods',
-                    'title'    => esc_html__('Excluded payment methods', 'wcfb'),
+                    'title'    => esc_html__('Excluded payment methods', 'woocommerce-freshbooks'),
                     'type'     => 'select',
                     'options'  => $gateways,
                     'chosen'   => true,
                     'multiple' => true,
-                ),
-            ) 
-        ));
+                ],
+            ]
+        ]);
 
-        self::createSection(array(
-            'id'     => 'backup', 
-            'title'  => esc_html__('Backup', 'wcfb'),
+        self::createSection([
+            'id'     => 'backup',
+            'title'  => esc_html__('Backup', 'woocommerce-freshbooks'),
             'icon'   => 'fas fa-shield-alt',
-            'fields' => array(
-                array(
+            'fields' => [
+                [
                     'type'  => 'backup',
-                    'title' => esc_html__('Backup', 'wcfb')
-                ),
-            ) 
-        ));
+                    'title' => esc_html__('Backup', 'woocommerce-freshbooks')
+                ],
+            ]
+        ]);
+    }
+
+    /**
+     * @param array<mixed> $args
+     * @return void
+     */
+    public static function createSection(array $args): void
+    {
+        CSF::createSection(Loader::$properties->settingKey, $args);
     }
 }

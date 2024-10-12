@@ -1,27 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BeycanPress\WooCommerce\FreshBooks;
 
-use \BeycanPress\FreshBooks\Connection;
-use \BeycanPress\FreshBooks\Model\Invoice;
-use \BeycanPress\FreshBooks\Model\InvoiceLine;
+use BeycanPress\FreshBooks\Connection;
+use BeycanPress\FreshBooks\Model\Invoice;
+use BeycanPress\FreshBooks\Model\InvoiceLine;
 
 class WooCommerce
 {
-    use PluginHero\Helpers;
+    use Helpers;
 
     /**
      * @var Connection
      */
-    private $conn;
+    private Connection $conn;
 
     /**
      * @var Invoice
      */
-    private $invoice;
+    private Invoice $invoice;
 
-    private $metaKey = 'freshbooks_invoice_id';
+    /**
+     * @var string
+     */
+    private string $metaKey = 'freshbooks_invoice_id';
 
+    /**
+     * constructor
+     */
     public function __construct()
     {
         $this->dailyInvoiceCreatedOrderIdsReset();
@@ -29,9 +37,12 @@ class WooCommerce
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'backend'], 10);
     }
 
-    public function dailyInvoiceCreatedOrderIdsReset()
+    /**
+     * @return void
+     */
+    public function dailyInvoiceCreatedOrderIdsReset(): void
     {
-        $today = date('Y-m-d');
+        $today = gmdate('Y-m-d');
         $lastReset = get_option('wcfb_invoice_created_order_ids_reset', '');
 
         if ($today != $lastReset) {
@@ -40,7 +51,11 @@ class WooCommerce
         }
     }
 
-    public function backend($order)
+    /**
+     * @param object $order
+     * @return void
+     */
+    public function backend(object $order): void
     {
         $invoiceId = get_post_meta($order->get_id(), $this->metaKey, true);
         $invoiceNumber = get_post_meta($order->get_id(), 'freshbooks_invoice_number', true);
@@ -48,12 +63,12 @@ class WooCommerce
 
         if ($invoiceId) {
             echo '<div class="order_data_column">';
-            echo '<h4>' . __('FreshBooks Invoice', 'wcfb') . '</h4>';
-            echo '<p><strong>' . __('Invoice ID', 'wcfb') . ':</strong> ' . $invoiceId . '</p>';
+            echo '<h4>' . esc_html__('FreshBooks Invoice', 'woocommerce-freshbooks') . '</h4>';
+            echo '<p><strong>' . esc_html__('Invoice ID', 'woocommerce-freshbooks') . ':</strong> ' . esc_html($invoiceId) . '</p>'; // phpcs:ignore
             if ($accountId && $invoiceNumber) {
-                echo '<p><strong>' . __('Account ID', 'wcfb') . ':</strong> ' . $accountId . '</p>';
-                echo '<p><strong>' . __('Invoice Number', 'wcfb') . ':</strong> ' . $invoiceNumber . '</p>';
-                echo '<p><a href="https://my.freshbooks.com/#/invoice/' . $accountId . '-' . $invoiceId . '" alt="Go to Invoice" target="_blank">Go to Invoice</a></strong></p>';
+                echo '<p><strong>' . esc_html__('Account ID', 'woocommerce-freshbooks') . ':</strong> ' . esc_html($accountId) . '</p>'; // phpcs:ignore
+                echo '<p><strong>' . esc_html__('Invoice Number', 'woocommerce-freshbooks') . ':</strong> ' . esc_html($invoiceNumber) . '</p>'; // phpcs:ignore
+                echo '<p><a href="https://my.freshbooks.com/#/invoice/' . esc_html($accountId) . '-' . esc_html($invoiceId) . '" alt="Go to Invoice" target="_blank">Go to Invoice</a></strong></p>'; // phpcs:ignore
             }
             echo '</div>';
         }
@@ -63,9 +78,11 @@ class WooCommerce
      * @param int $orderId
      * @return void
      */
-    public function invoiceProcess(int $orderId)
+    public function invoiceProcess(int $orderId): void
     {
-        if (!$conn = $this->callFunc('initFbConnection', true)) return;
+        if (!$conn = $this->callFunc('initFbConnection', true)) {
+            return;
+        }
 
         try {
             $order = wc_get_order($orderId);
@@ -87,14 +104,6 @@ class WooCommerce
                     ->setEmail($email)
                     ->setFirstName($order->get_billing_first_name())
                     ->setLastName($order->get_billing_last_name())
-                    ->setOrganization($order->get_billing_company())
-                    ->setMobilePhone($order->get_billing_phone())
-                    ->setBillingStreet($order->get_billing_address_1())
-                    ->setBillingStreet2($order->get_billing_address_2())
-                    ->setBillingCity($order->get_billing_city())
-                    ->setBillingProvince($order->get_billing_state())
-                    ->setBillingPostalCode($order->get_billing_postcode())
-                    ->setBillingCountry($order->get_billing_country())
                     ->setCurrencyCode($order->get_currency())
                     ->create();
 
@@ -104,7 +113,6 @@ class WooCommerce
             $lines = [];
 
             foreach ($order->get_items() as $item) {
-
                 $itemPrice = $this->setting('addDiscountData') ? $item->get_subtotal() : $item->get_total();
 
                 $line = (new InvoiceLine())
@@ -137,7 +145,7 @@ class WooCommerce
             $this->invoice = $conn->invoice()
                 ->setStatus("draft")
                 ->setCustomerId($client->getId())
-                ->setCreateDate(date("Y-m-d"))
+                ->setCreateDate(gmdate("Y-m-d"))
                 ->setLines($lines);
 
             if ($this->setting('addDiscountData')) {
@@ -175,7 +183,6 @@ class WooCommerce
 
             $this->paymentCompleted($orderId);
         } catch (\Throwable $th) {
-
             wp_mail(get_option('admin_email'), 'FreshBooks Invoice Create Error', $th->getMessage());
 
             $this->debug($th->getMessage(), 'CRITICAL', [
@@ -190,9 +197,11 @@ class WooCommerce
      * @param int $orderId
      * @return void
      */
-    public function paymentCompleted(int $orderId)
+    public function paymentCompleted(int $orderId): void
     {
-        if (!$conn = $this->callFunc('initFbConnection', true)) return;
+        if (!$conn = $this->callFunc('initFbConnection', true)) {
+            return;
+        }
 
         $order = wc_get_order($orderId);
         if (!$this->invoice) {
@@ -202,28 +211,27 @@ class WooCommerce
 
         if (floatval($this->invoice->getOutstanding()->amount) > 0) {
             try {
-
                 $gateway = $order->get_payment_method();
 
-                if ($gateway == 'stripe' || strpos($gateway, 'stripe') !== false) {
+                if ('stripe' == $gateway || false !== strpos($gateway, 'stripe')) {
                     $type = 'Credit Card';
                 } elseif (
-                    $gateway == 'ppcp' ||
-                    $gateway == 'paypal' ||
-                    $gateway == 'ppec_paypal' ||
-                    $gateway == 'ppcp-gateway' ||
-                    $gateway == 'ppcp-oxxo-gateway' ||
-                    $gateway == 'ppcp-card-button-gateway' ||
-                    $gateway == 'ppcp-credit-card-gateway' ||
-                    $gateway == 'ppcp-pay-upon-invoice-gateway' ||
-                    (strpos($gateway, 'paypal') !== false || strpos($gateway, 'ppcp') !== false)
+                    'ppcp' == $gateway ||
+                    'paypal' == $gateway ||
+                    'ppec_paypal' == $gateway ||
+                    'ppcp-gateway' == $gateway ||
+                    'ppcp-oxxo-gateway' == $gateway ||
+                    'ppcp-card-button-gateway' == $gateway ||
+                    'ppcp-credit-card-gateway' == $gateway ||
+                    'ppcp-pay-upon-invoice-gateway' == $gateway ||
+                    (false !== strpos($gateway, 'paypal') || false !== strpos($gateway, 'ppcp'))
                 ) {
                     $type = 'PayPal';
-                } elseif ($gateway == 'bacs') {
+                } elseif ('bacs' == $gateway) {
                     $type = 'Bank Transfer';
-                } elseif ($gateway == 'cod') {
+                } elseif ('cod' == $gateway) {
                     $type = 'Cash';
-                } elseif ($gateway == 'cheque') {
+                } elseif ('cheque' == $gateway) {
                     $type = 'Check';
                 } else {
                     $type = "Other";
@@ -236,13 +244,12 @@ class WooCommerce
                     ->setAmount((object) [
                         "amount" => $this->invoice->getOutstanding()->amount
                     ])
-                    ->setDate(date("Y-m-d"))
+                    ->setDate(gmdate("Y-m-d"))
                     ->setType($type)
                     ->create();
 
                 do_action('wcfb_payment_completed', $conn, $order, $this->invoice);
             } catch (\Throwable $th) {
-
                 wp_mail(get_option('admin_email'), 'FreshBooks Payment Add Error', $th->getMessage());
 
                 $this->debug($th->getMessage(), 'CRITICAL', [

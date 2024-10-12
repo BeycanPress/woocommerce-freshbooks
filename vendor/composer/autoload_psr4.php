@@ -7,6 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'BeycanPress\\WooCommerce\\FreshBooks\\' => array($baseDir . '/app'),
-    'BeycanPress\\Http\\' => array($vendorDir . '/beycanpress/http/src'),
     'BeycanPress\\FreshBooks\\' => array($vendorDir . '/beycanpress/freshbooks/src'),
 );

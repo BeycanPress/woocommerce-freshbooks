@@ -10,7 +10,6 @@ class ComposerStaticInit02eacec343333f27284feb82d3281d59
         'B' => 
         array (
             'BeycanPress\\WooCommerce\\FreshBooks\\' => 35,
-            'BeycanPress\\Http\\' => 17,
             'BeycanPress\\FreshBooks\\' => 23,
         ),
     );
@@ -19,10 +18,6 @@ class ComposerStaticInit02eacec343333f27284feb82d3281d59
         'BeycanPress\\WooCommerce\\FreshBooks\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
-        ),
-        'BeycanPress\\Http\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/beycanpress/http/src',
         ),
         'BeycanPress\\FreshBooks\\' => 
         array (
