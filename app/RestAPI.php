@@ -53,7 +53,7 @@ class RestAPI
         $conn = $this->callFunc('initFbConnection');
 
         try {
-            $code = $this->request->get('code');
+            $code = isset($_GET['code']) ? sanitize_text_field(wp_unslash($_GET['code'])) : null;
             if (!$code) {
                 die('Code is required.');
             }
@@ -63,6 +63,7 @@ class RestAPI
             $this->updateSetting('account', $account->getId());
             $this->redirect(admin_url('admin.php?page=wcfb_settings'));
         } catch (\Throwable $th) {
+            wp_send_json_error($th->getMessage());
             $this->debug($th->getMessage(), 'CRITICAL', [
                 'trace' => $th->getTrace(),
                 'file' => $th->getFile(),
