@@ -40,3 +40,6 @@
     }
     
 }
+
+.connected-switcher {display: none;}
+.connected-status {color: green; font-weight: bold;}

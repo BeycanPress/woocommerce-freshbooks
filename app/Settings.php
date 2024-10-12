@@ -89,13 +89,6 @@ class Settings
             $accounts['unconnected'] = esc_html__('Unconnected', 'woocommerce-freshbooks');
         }
 
-        add_action('admin_head', function (): void {
-            echo '<style>
-                .connected-switcher {display: none;}
-                .connected-status {color: green; font-weight: bold;}
-                </style>';
-        });
-
         self::createSection([
             'id'     => 'generalSettings',
             'title'  => esc_html__('General settings', 'woocommerce-freshbooks'),

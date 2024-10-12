@@ -18,9 +18,9 @@ class Loader
     public static object $properties;
 
     /**
-     * @var array<mixed>
+     * @var array<mixed>|null
      */
-    public static array $settings = [];
+    public static ?array $settings = null;
 
     /**
      * @var Connection|null
@@ -111,6 +111,7 @@ class Loader
         ) {
             add_action('admin_enqueue_scripts', function (): void {
                 if ($conn = $this->callFunc('initFbConnection')) {
+                    $this->addStyle('main.css');
                     $key = $this->addScript('admin.js', ['jquery']);
                     wp_localize_script($key, 'WCFB', [
                         'ajaxUrl' => admin_url('admin-ajax.php'),
