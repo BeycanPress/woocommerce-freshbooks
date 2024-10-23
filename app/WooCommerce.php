@@ -160,7 +160,7 @@ class WooCommerce
                     }
 
                     $this->invoice
-                        ->setDiscountValue($discountRate)
+                        ->setDiscountValue((float) $discountRate)
                         ->setDiscountDescription($discountCodes);
                 }
             }
