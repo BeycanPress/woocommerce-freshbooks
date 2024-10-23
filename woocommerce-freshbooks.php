@@ -6,7 +6,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: FreshBooks Integration for WooCommerce
- * Version:     1.1.5
+ * Version:     1.1.6
  * Author URI:  https://beycanpress.com/
  * Description: FreshBooks Integration for WooCommerce
  * Author:      BeycanPress LLC

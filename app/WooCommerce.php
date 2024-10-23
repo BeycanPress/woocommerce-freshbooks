@@ -18,32 +18,43 @@ class WooCommerce
     private ?Invoice $invoice = null;
 
     /**
-     * @var string
-     */
-    private string $metaKey = 'freshbooks_invoice_id';
-
-    /**
      * constructor
      */
     public function __construct()
     {
-        $this->dailyInvoiceCreatedOrderIdsReset();
+        add_filter('woocommerce_order_actions', [$this, 'addOrderActions'], 10, 2);
         add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'backend'], 10);
+        add_action('woocommerce_process_shop_order_meta', [$this, 'executeInvoiceAction'], 50);
     }
 
     /**
+     * @param array<mixed> $actions
+     * @param object $order
+     * @return array<mixed>
+     */
+    public function addOrderActions(array $actions, object $order): array
+    {
+        $invoiceId = get_post_meta($order->get_id(), 'wcfb_invoice_id', true);
+
+        if (!$invoiceId) {
+            $actions['create-invoice'] = esc_html__('Create FreshBooks Invoice', 'woocommerce-freshbooks');
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param int $orderId
      * @return void
      */
-    public function dailyInvoiceCreatedOrderIdsReset(): void
+    public function executeInvoiceAction(int $orderId): void
     {
-        $today = gmdate('Y-m-d');
-        $lastReset = get_option('wcfb_invoice_created_order_ids_reset', '');
-
-        if ($today != $lastReset) {
-            update_option('wcfb_invoice_created_order_ids', []);
-            update_option('wcfb_invoice_created_order_ids_reset', $today);
+        if ('create-invoice' !== filter_input(INPUT_POST, 'wc_order_action')) {
+            return;
         }
+
+        $this->invoiceProcess($orderId);
     }
 
     /**
@@ -52,9 +63,9 @@ class WooCommerce
      */
     public function backend(object $order): void
     {
-        $invoiceId = get_post_meta($order->get_id(), $this->metaKey, true);
-        $invoiceNumber = get_post_meta($order->get_id(), 'freshbooks_invoice_number', true);
-        $accountId = get_post_meta($order->get_id(), 'freshbooks_invoice_account_id', true);
+        $invoiceId = get_post_meta($order->get_id(), 'wcfb_invoice_id', true);
+        $invoiceNumber = get_post_meta($order->get_id(), 'wcfb_invoice_number', true);
+        $accountId = get_post_meta($order->get_id(), 'wcfb_invoice_account_id', true);
 
         if ($invoiceId) {
             echo '<div class="order_data_column">';
@@ -89,8 +100,7 @@ class WooCommerce
                 return;
             }
 
-            $invoiceCreatedOrderIds = get_option('wcfb_invoice_created_order_ids', []);
-            if (in_array($orderId, $invoiceCreatedOrderIds)) {
+            if (get_post_meta($orderId, 'wcfb_invoice_id', true)) {
                 return;
             }
 
@@ -166,11 +176,9 @@ class WooCommerce
             }
 
             $this->invoice->create();
-            $invoiceCreatedOrderIds[] = $orderId;
-            update_option('wcfb_invoice_created_order_ids', $invoiceCreatedOrderIds);
-            update_post_meta($orderId, $this->metaKey, $this->invoice->getId());
-            update_post_meta($orderId, 'freshbooks_invoice_number', $this->invoice->getInvoiceNumber());
-            update_post_meta($orderId, 'freshbooks_invoice_account_id', $this->invoice->getAccountId());
+            update_post_meta($orderId, 'wcfb_invoice_id', $this->invoice->getId());
+            update_post_meta($orderId, 'wcfb_invoice_number', $this->invoice->getInvoiceNumber());
+            update_post_meta($orderId, 'wcfb_invoice_account_id', $this->invoice->getAccountId());
 
             if ($this->setting('sendToEmail')) {
                 $this->invoice->sendToEMail($email);
@@ -202,7 +210,7 @@ class WooCommerce
 
         $order = wc_get_order($orderId);
         if (!$this->invoice) {
-            $invoiceId = (int) $order->get_meta('_wcfb_invoice_id');
+            $invoiceId = get_post_meta($orderId, 'wcfb_invoice_id', true);
             $this->invoice = $conn->invoice()->getById($invoiceId);
         }
 
