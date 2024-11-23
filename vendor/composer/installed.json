@@ -37,18 +37,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeycanPress/freshbooks.git",
-                "reference": "a06f5bf7314d195bc3389c047a6327118253a62d"
+                "reference": "b8af40550176b3e413911f49894fb62a22bddb7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/a06f5bf7314d195bc3389c047a6327118253a62d",
-                "reference": "a06f5bf7314d195bc3389c047a6327118253a62d",
+                "url": "https://api.github.com/repos/BeycanPress/freshbooks/zipball/b8af40550176b3e413911f49894fb62a22bddb7f",
+                "reference": "b8af40550176b3e413911f49894fb62a22bddb7f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2024-11-23T16:44:07+00:00",
+            "time": "2024-11-23T16:52:28+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

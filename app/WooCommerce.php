@@ -204,6 +204,7 @@ class WooCommerce
      */
     public function paymentCompleted(int $orderId): void
     {
+        /** @var Connection $conn */
         if (!$conn = $this->callFunc('initFbConnection', true)) {
             return;
         }
@@ -244,7 +245,7 @@ class WooCommerce
 
                 $type = apply_filters('wcfb_payment_type', $type, $conn, $order, $this->invoice);
 
-                $conn->payment()
+                $payment = $conn->payment()
                     ->setInvoiceId($this->invoice->getId())
                     ->setAmount((object) [
                         "amount" => $this->invoice->getOutstanding()->amount
@@ -254,6 +255,8 @@ class WooCommerce
                     ->create();
 
                 do_action('wcfb_payment_completed', $conn, $order, $this->invoice);
+
+                update_post_meta($orderId, 'wcfb_payment_id', $payment->getId());
             } catch (\Throwable $th) {
                 wp_mail(get_option('admin_email'), 'FreshBooks Payment Add Error', $th->getMessage());
 
