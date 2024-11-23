@@ -24,6 +24,7 @@ class WooCommerce
     {
         add_filter('woocommerce_order_actions', [$this, 'addOrderActions'], 10, 2);
         add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
+        //add_action('woocommerce_order_refunded', [$this, 'refundProcess'], 10, 2);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'backend'], 10);
         add_action('woocommerce_process_shop_order_meta', [$this, 'executeInvoiceAction'], 50);
     }
@@ -81,6 +82,75 @@ class WooCommerce
     }
 
     /**
+     * @param object $order
+     * @return array<InvoiceLine>
+     */
+    private function getInvoiceLines(object $order): array
+    {
+        $lines = [];
+
+        foreach ($order->get_items() as $item) {
+            $itemPrice = $this->setting('addDiscountData') ? $item->get_subtotal() : $item->get_total();
+
+            $line = (new InvoiceLine())
+                ->setName($item->get_name())
+                ->setAmount((object) [
+                    "amount" => ($itemPrice / $item->get_quantity()),
+                    "code" => $order->get_currency()
+                ])
+                ->setQuantity($item->get_quantity());
+
+            if ($tax = $order->get_line_tax($item)) {
+                $taxes = array_values($order->get_items('tax'));
+
+                if (isset($taxes[0])) {
+                    $tax = $taxes[0];
+                    $line->setTaxName1($tax->get_label())
+                        ->setTaxAmount1($tax->get_rate_percent());
+                }
+
+                if (isset($taxes[1])) {
+                    $tax = $taxes[1];
+                    $line->setTaxName2($tax->get_label())
+                        ->setTaxAmount2($tax->get_rate_percent());
+                }
+            }
+
+            $lines[] = $line;
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param object $order
+     * @param Invoice|null $invoice
+     * @return void
+     */
+    private function maybeAddDiscount(object $order, ?Invoice &$invoice = null): void
+    {
+        if ($this->setting('addDiscountData')) {
+            $totalDiscount = $order->get_total_discount();
+
+            if ($totalDiscount > 0) {
+                $totalOrderValue = $order->get_subtotal();
+                $discountCodes = $order->get_coupon_codes();
+                $discountCodes = implode(',', $discountCodes);
+
+                if ($totalOrderValue > 0) {
+                    $discountRate = ($totalDiscount / $totalOrderValue) * 100;
+                } else {
+                    $discountRate = 0;
+                }
+
+                ($invoice ?? $this->invoice)
+                    ->setDiscountValue($discountRate)
+                    ->setDiscountDescription($discountCodes);
+            }
+        }
+    }
+
+    /**
      * @param int $orderId
      * @return void
      */
@@ -117,37 +187,7 @@ class WooCommerce
                 do_action('wcfb_client_created', $this->invoice, $order);
             }
 
-            $lines = [];
-
-            foreach ($order->get_items() as $item) {
-                $itemPrice = $this->setting('addDiscountData') ? $item->get_subtotal() : $item->get_total();
-
-                $line = (new InvoiceLine())
-                    ->setName($item->get_name())
-                    ->setAmount((object) [
-                        "amount" => ($itemPrice / $item->get_quantity()),
-                        "code" => $order->get_currency()
-                    ])
-                    ->setQuantity($item->get_quantity());
-
-                if ($tax = $order->get_line_tax($item)) {
-                    $taxes = array_values($order->get_items('tax'));
-
-                    if (isset($taxes[0])) {
-                        $tax = $taxes[0];
-                        $line->setTaxName1($tax->get_label())
-                            ->setTaxAmount1($tax->get_rate_percent());
-                    }
-
-                    if (isset($taxes[1])) {
-                        $tax = $taxes[1];
-                        $line->setTaxName2($tax->get_label())
-                            ->setTaxAmount2($tax->get_rate_percent());
-                    }
-                }
-
-                $lines[] = $line;
-            }
+            $lines = $this->getInvoiceLines($order);
 
             $this->invoice = $conn->invoice()
                 ->setStatus("draft")
@@ -155,25 +195,7 @@ class WooCommerce
                 ->setCreateDate(gmdate("Y-m-d"))
                 ->setLines($lines);
 
-            if ($this->setting('addDiscountData')) {
-                $totalDiscount = $order->get_total_discount();
-
-                if ($totalDiscount > 0) {
-                    $totalOrderValue = $order->get_subtotal();
-                    $discountCodes = $order->get_coupon_codes();
-                    $discountCodes = implode(',', $discountCodes);
-
-                    if ($totalOrderValue > 0) {
-                        $discountRate = ($totalDiscount / $totalOrderValue) * 100;
-                    } else {
-                        $discountRate = 0;
-                    }
-
-                    $this->invoice
-                        ->setDiscountValue($discountRate)
-                        ->setDiscountDescription($discountCodes);
-                }
-            }
+            $this->maybeAddDiscount($order);
 
             $this->invoice->create();
             update_post_meta($orderId, 'wcfb_invoice_id', $this->invoice->getId());
@@ -266,6 +288,70 @@ class WooCommerce
                     'line' => $th->getLine()
                 ]);
             }
+        }
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $refundId
+     * @return void
+     */
+    public function refundProcess(int $orderId, int $refundId): void
+    {
+        /** @disregard */
+        if (!$conn = $this->callFunc('initFbConnection', true)) {
+            return;
+        }
+
+        try {
+            $paymentId = get_post_meta($orderId, 'wcfb_payment_id', true);
+            $invoiceId = get_post_meta($orderId, 'wcfb_invoice_id', true);
+
+            if (!$invoiceId || !$paymentId) {
+                return;
+            }
+
+            $order = wc_get_order($orderId);
+            $refund = new \WC_Order_Refund($refundId);
+            $refundAmount = (float) $refund->get_amount();
+            $invoice = $conn->invoice()->getById($invoiceId);
+            $payment =  $conn->payment()->getById($paymentId);
+
+            $amount = floatval($payment->getAmount()->amount);
+            $amount = $amount - $refundAmount;
+
+            $payment->setAmount((object) [
+                "amount" => strval($amount),
+                "code" => "USD"
+            ]);
+
+            $lines = $this->getInvoiceLines($order);
+
+            $lines[] = (new InvoiceLine())
+                ->setName("Refund - " . $refundId)
+                ->setAmount((object) [
+                    "amount" => '-' . strval($refundAmount),
+                    "code" => $order->get_currency()
+                ])
+                ->setQuantity(1);
+
+            $invoice->setLines($lines);
+
+            $this->maybeAddDiscount($order, $invoice);
+
+            if (0 <= $amount) {
+                $payment->update();
+            }
+
+            $invoice->update();
+        } catch (\Throwable $th) {
+            wp_mail(get_option('admin_email'), 'FreshBooks - Refund Invoice Error', $th->getMessage());
+
+            $this->debug($th->getMessage(), 'CRITICAL', [
+                'trace' => $th->getTrace(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
         }
     }
 }
