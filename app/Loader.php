@@ -104,6 +104,7 @@ class Loader
      */
     public function adminProcess(): void
     {
+        $this->addStyle('main.css');
         if (
             !$this->setting('connected') &&
             isset($_GET['page']) &&
@@ -111,7 +112,6 @@ class Loader
         ) {
             add_action('admin_enqueue_scripts', function (): void {
                 if ($conn = $this->callFunc('initFbConnection')) {
-                    $this->addStyle('main.css');
                     $key = $this->addScript('admin.js', ['jquery']);
                     wp_localize_script($key, 'WCFB', [
                         'ajaxUrl' => admin_url('admin-ajax.php'),
