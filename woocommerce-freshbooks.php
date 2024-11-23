@@ -6,7 +6,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Plugin Name: FreshBooks Integration for WooCommerce
- * Version:     1.1.6
+ * Version:     1.1.7
  * Author URI:  https://beycanpress.com/
  * Description: FreshBooks Integration for WooCommerce
  * Author:      BeycanPress LLC
@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
  * Domain Path: /languages
  * Tags: WooCommerce, FreshBooks, Integration
  * Requires at least: 5.0
- * Tested up to: 6.6.2
+ * Tested up to: 6.7.1
  * Requires PHP: 8.1
 */
 
