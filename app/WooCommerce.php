@@ -23,8 +23,8 @@ class WooCommerce
     public function __construct()
     {
         add_filter('woocommerce_order_actions', [$this, 'addOrderActions'], 10, 2);
+        add_action('woocommerce_order_refunded', [$this, 'refundProcess'], 10, 2);
         add_action('woocommerce_order_status_completed', [$this, 'invoiceProcess']);
-        //add_action('woocommerce_order_refunded', [$this, 'refundProcess'], 10, 2);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'backend'], 10);
         add_action('woocommerce_process_shop_order_meta', [$this, 'executeInvoiceAction'], 50);
     }
@@ -124,10 +124,9 @@ class WooCommerce
 
     /**
      * @param object $order
-     * @param Invoice|null $invoice
      * @return void
      */
-    private function maybeAddDiscount(object $order, ?Invoice &$invoice = null): void
+    private function maybeAddDiscount(object $order): void
     {
         if ($this->setting('addDiscountData')) {
             $totalDiscount = $order->get_total_discount();
@@ -143,7 +142,7 @@ class WooCommerce
                     $discountRate = 0;
                 }
 
-                ($invoice ?? $this->invoice)
+                ($this->invoice)
                     ->setDiscountValue($discountRate)
                     ->setDiscountDescription($discountCodes);
             }
@@ -314,7 +313,7 @@ class WooCommerce
             $order = wc_get_order($orderId);
             $refund = new \WC_Order_Refund($refundId);
             $refundAmount = (float) $refund->get_amount();
-            $invoice = $conn->invoice()->getById($invoiceId);
+            $invoice = $conn->invoice()->getById($invoiceId, true);
             $payment =  $conn->payment()->getById($paymentId);
 
             $amount = floatval($payment->getAmount()->amount);
@@ -325,25 +324,19 @@ class WooCommerce
                 "code" => "USD"
             ]);
 
-            $lines = $this->getInvoiceLines($order);
-
-            $lines[] = (new InvoiceLine())
-                ->setName("Refund - " . $refundId)
-                ->setAmount((object) [
-                    "amount" => '-' . strval($refundAmount),
-                    "code" => $order->get_currency()
-                ])
-                ->setQuantity(1);
-
-            $invoice->setLines($lines);
-
-            $this->maybeAddDiscount($order, $invoice);
+            $invoice->addLine((new InvoiceLine())
+            ->setName("Refund - " . $refundId)
+            ->setAmount((object) [
+                "amount" => '-' . strval($refundAmount),
+                "code" => $order->get_currency()
+            ])
+            ->setQuantity(1));
 
             if (0 <= $amount) {
                 $payment->update();
             }
 
-            $invoice->update();
+            $invoice->updateLines();
         } catch (\Throwable $th) {
             wp_mail(get_option('admin_email'), 'FreshBooks - Refund Invoice Error', $th->getMessage());
 

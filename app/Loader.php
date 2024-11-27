@@ -104,7 +104,10 @@ class Loader
      */
     public function adminProcess(): void
     {
-        $this->addStyle('main.css');
+        add_action('admin_enqueue_scripts', function (): void {
+            $this->addStyle('main.css');
+        });
+
         if (
             !$this->setting('connected') &&
             isset($_GET['page']) &&
