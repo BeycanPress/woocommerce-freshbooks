@@ -336,6 +336,12 @@ class WooCommerce
                 $payment->update();
             }
 
+            if ($invoice->getDiscountValue() > 0) {
+                $invoice->setDiscountValue(100);
+                $invoice->setDiscountDescription('');
+                $invoice->update();
+            }
+
             $invoice->updateLines();
         } catch (\Throwable $th) {
             wp_mail(get_option('admin_email'), 'FreshBooks - Refund Invoice Error', $th->getMessage());
